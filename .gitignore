@@ -1,0 +1,12 @@
+## build system files
+_build/
+erl_crash.dump
+*.ez
+
+## generic files
+*~
+*.DS_Store
+*.swp
+*.out
+Icon?
+Thumbs.db
