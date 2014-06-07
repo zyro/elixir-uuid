@@ -137,7 +137,7 @@ defmodule UUID do
       |> uuid_to_string format
   end
   def uuid3(<<uuid::binary>>, <<name::binary>>, format) do
-  	{_type, uuid} = uuid_string_to_hex_pair(uuid)
+    {_type, uuid} = uuid_string_to_hex_pair(uuid)
     namebased_uuid(:md5, <<uuid::binary, name::binary>>)
       |> uuid_to_string format
   end
@@ -217,7 +217,7 @@ defmodule UUID do
       |> uuid_to_string format
   end
   def uuid5(<<uuid::binary>>, <<name::binary>>, format) do
-  	{_type, uuid} = uuid_string_to_hex_pair(uuid)
+    {_type, uuid} = uuid_string_to_hex_pair(uuid)
     namebased_uuid(:sha1, <<uuid::binary, name::binary>>)
       |> uuid_to_string format
   end
@@ -250,7 +250,7 @@ defmodule UUID do
 
   # Extract the type (:default etc) and pure hex string from a UUID String.
   defp uuid_string_to_hex_pair(<<uuid::binary>>) do
-  	uuid = String.downcase(uuid)
+    uuid = String.downcase(uuid)
     case uuid do
       <<u0::64, "-", u1::32, "-", u2::32, "-", u3::32, "-", u4::96>> ->
         {:default, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
