@@ -1,7 +1,7 @@
 Elixir UUID
 ===========
 
-UUID generator and utilities for Elixir. See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
+UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
 
 ### Installation
 
@@ -91,7 +91,7 @@ iex> UUID.uuid1(:urn)
 
 ### Utility functions
 
-Use `UUID.info/1` to get a keyword list containing information about the given UUID:
+Use `UUID.info/1` to get a [keyword list](http://elixir-lang.org/getting_started/7.html#toc_1) containing information about the given UUID:
 ```elixir
 iex> UUID.info("4995555a-1361-4b45-5803-9ef16250956c")
 [uuid: "4995555a-1361-4b45-5803-9ef16250956c",
