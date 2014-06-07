@@ -339,7 +339,7 @@ defmodule UUID do
     :reserved_ncs
   end
   defp variant(_) do
-    :unknown
+    raise ArgumentError, message: "Invalid argument; Not valid variant bits"
   end
 
 end
