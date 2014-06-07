@@ -1,5 +1,5 @@
 defmodule UUID do
-	use Bitwise, only_operators: true
+  use Bitwise, only_operators: true
   @moduledoc """
   UUID generator and utilities for Elixir.
   See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
@@ -17,16 +17,16 @@ defmodule UUID do
   # UUID v3 identifier.
   @uuid_v3 3
   # UUID v4 identifier.
-	@uuid_v4 4
-	# UUID v5 identifier.
-	@uuid_v5 5
+  @uuid_v4 4
+  # UUID v5 identifier.
+  @uuid_v5 5
 
-	@urn "urn:uuid:"
+  @urn "urn:uuid:"
 
   @doc """
-	Inspect a UUID and return information about its type, version and variant.
+  Inspect a UUID and return information about its type, version and variant.
 
-	Timestamp portion is not checked
+  Timestamp portion is not checked
 
   ## Examples
 
@@ -36,7 +36,7 @@ defmodule UUID do
      version: 4,
      variant: :rfc4122]
 
-		iex> UUID.info("da55ad7a21334017445da3e25682e4e8")
+    iex> UUID.info("da55ad7a21334017445da3e25682e4e8")
     [uuid: "da55ad7a21334017445da3e25682e4e8",
      type: :hex,
      version: 4,
@@ -50,19 +50,9 @@ defmodule UUID do
 
   """
   def info(<<uuid::binary>> = original) do
-  	uuid = String.downcase(uuid)
-  	{type, uuid} = case uuid do
-      <<u0::64, "-", u1::32, "-", u2::32, "-", u3::32, "-", u4::96>> ->
-      	{:default, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
-      <<u0::256>> ->
-        {:hex, <<u0::256>>}
-      <<@urn, u0::64, "-", u1::32, "-", u2::32, "-", u3::32, "-", u4::96>> ->
-      	{:urn, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
-      _ ->
-      	raise ArgumentError, message: "Not a valid UUID"
-  	end
-  	{:ok, [uuid], []} = :io_lib.fread('~16u', to_char_list(uuid))
-  	uuid = <<uuid::128>>
+    {type, uuid} = uuid_string_to_hex_pair(uuid)
+    {:ok, [uuid], []} = :io_lib.fread('~16u', to_char_list(uuid))
+    uuid = <<uuid::128>>
     <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = uuid
     [uuid: original,
      type: type,
@@ -70,7 +60,7 @@ defmodule UUID do
      variant: variant(<<v0, v1, v2>>)]
   end
   def info(_) do
-    raise ArgumentError, message: "Expected: String"
+    raise ArgumentError, message: "Invalid argument; Expected: String"
   end
 
   @doc """
@@ -92,37 +82,41 @@ defmodule UUID do
     "urn:uuid:2fd5fcba-ed70-11e3-b7e3-1f299fdda3d4"
 
   """
-	def uuid1(format \\ :default) do
-		<<time_hi::12, time_mid::16, time_low::32>> = uuid1_time()
+  def uuid1(format \\ :default) do
+    <<time_hi::12, time_mid::16, time_low::32>> = uuid1_time()
     <<clock_seq_hi::6, clock_seq_low::8>> = uuid1_clockseq()
     <<node::48>> = uuid1_node()
     <<time_low::32, time_mid::16, @uuid_v1::4, time_hi::12, @variant10::2,
       clock_seq_hi::6, clock_seq_low::8, node::48>>
       |> uuid_to_string format
-	end
+  end
 
   @doc """
   Generate a new UUID v3. This version uses an MD5 hash of fixed value (chosen
-  based on a namespace atom - see Appendix C of RFC 4122) and a name value.
+  based on a namespace atom - see Appendix C of RFC 4122) and a name value. Can
+  also be given an existing UUID String instead of a namespace atom.
 
-  Accepted arguments are: :dns|:url|:oid|:x500|:nil, String
+  Accepted arguments are: :dns|:url|:oid|:x500|:nil OR uuid, String
 
   ## Examples
 
-    iex> UUID.uuid3(:dns, "name")
-    "47f5e2c5-e9b3-3d11-ba7c-25ef963a1a6e"
+    iex> UUID.uuid3(:dns, "my.domain.com")
+    "eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
 
-    iex> UUID.uuid3(:dns, "name", :default)
-    "47f5e2c5-e9b3-3d11-ba7c-25ef963a1a6e"
+    iex> UUID.uuid3(:dns, "my.domain.com", :default)
+    "eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
 
-    iex> UUID.uuid3(:dns, "name", :hex)
-    "47f5e2c5e9b33d11ba7c25ef963a1a6e"
+    iex> UUID.uuid3(:dns, "my.domain.com", :hex)
+    "eecf4c2bf6e53ae3bef71ea09f91d3e7"
 
-    iex> UUID.uuid3(:dns, "name", :urn)
-    "urn:uuid:47f5e2c5-e9b3-3d11-ba7c-25ef963a1a6e"
+    iex> UUID.uuid3(:dns, "my.domain.com", :urn)
+    "urn:uuid:eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
+
+    iex> UUID.uuid3("9176cde7-42a6-5f1d-a840-124e858a3311", "my.domain.com")
+    "4ee0abbf-7add-3371-8bd5-6818256899d4"
 
   """
-	def uuid3(:dns, <<name::binary>>, format \\ :default) do
+  def uuid3(:dns, <<name::binary>>, format \\ :default) do
     namebased_uuid(:md5, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
       |> uuid_to_string format
   end
@@ -139,11 +133,17 @@ defmodule UUID do
       |> uuid_to_string format
   end
   def uuid3(:nil, <<name::binary>>, format) do
-  	namebased_uuid(:md5, <<0::128, name::binary>>)
-  	  |> uuid_to_string format
+    namebased_uuid(:md5, <<0::128, name::binary>>)
+      |> uuid_to_string format
+  end
+  def uuid3(<<uuid::binary>>, <<name::binary>>, format) do
+  	{_type, uuid} = uuid_string_to_hex_pair(uuid)
+    namebased_uuid(:md5, <<uuid::binary, name::binary>>)
+      |> uuid_to_string format
   end
   def uuid3(_, _, _) do
-    raise ArgumentError, message: "Expected: :dns|:url|:oid|:x500|:nil, String"
+    raise ArgumentError, message:
+    "Invalid argument; Expected: :dns|:url|:oid|:x500|:nil OR uuid, String"
   end
 
   @doc """
@@ -165,34 +165,38 @@ defmodule UUID do
     "urn:uuid:3c69679f-774b-4fb1-80c1-7b29c6e7d0a0"
 
   """
-	def uuid4(format \\ :default) do
-		<<u0::48, _::4, u1::12, _::2, u2::62>> = :crypto.rand_bytes(16)
-		<<u0::48, @uuid_v4::4, u1::12, @variant10::2, u2::62>>
+  def uuid4(format \\ :default) do
+    <<u0::48, _::4, u1::12, _::2, u2::62>> = :crypto.rand_bytes(16)
+    <<u0::48, @uuid_v4::4, u1::12, @variant10::2, u2::62>>
       |> uuid_to_string format
-	end
+  end
 
   @doc """
   Generate a new UUID v5. This version uses an SHA1 hash of fixed value (chosen
-  based on a namespace atom - see Appendix C of RFC 4122) and a name value.
+  based on a namespace atom - see Appendix C of RFC 4122) and a name value. Can
+  also be given an existing UUID String instead of a namespace atom.
 
-  Accepted arguments are: :dns|:url|:oid|:x500|:nil, String
+  Accepted arguments are: :dns|:url|:oid|:x500|:nil OR uuid, String
 
   ## Examples
 
-    iex> UUID.uuid5(:dns, "name")
-    "40079f8e-7923-5c5c-8ee1-fee2257890e5"
+    iex> UUID.uuid5(:dns, "my.domain.com")
+    "ae119419-7776-563d-b6e8-8a177abccc7a"
 
-    iex> UUID.uuid5(:dns, "name", :default)
-    "40079f8e-7923-5c5c-8ee1-fee2257890e5"
+    iex> UUID.uuid5(:dns, "my.domain.com", :default)
+    "ae119419-7776-563d-b6e8-8a177abccc7a"
 
-    iex> UUID.uuid5(:dns, "name", :hex)
-    "40079f8e79235c5c8ee1fee2257890e5"
+    iex> UUID.uuid5(:dns, "my.domain.com", :hex)
+    "ae1194197776563db6e88a177abccc7a"
 
-    iex> UUID.uuid5(:dns, "name", :urn)
-    "urn:uuid:40079f8e-7923-5c5c-8ee1-fee2257890e5"
+    iex> UUID.uuid5(:dns, "my.domain.com", :urn)
+    "urn:uuid:ae119419-7776-563d-b6e8-8a177abccc7a"
+
+    iex> UUID.uuid5("ae119419-7776-563d-b6e8-8a177abccc7a", "my.domain.com")
+    "9176cde7-42a6-5f1d-a840-124e858a3311"
 
   """
-	def uuid5(:dns, <<name::binary>>, format \\ :default) do
+  def uuid5(:dns, <<name::binary>>, format \\ :default) do
     namebased_uuid(:sha1, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
       |> uuid_to_string format
   end
@@ -212,49 +216,73 @@ defmodule UUID do
     namebased_uuid(:sha1, <<0::128, name::binary>>)
       |> uuid_to_string format
   end
-  def uuid5(_, _, _) do
-    raise ArgumentError, message: "Expected: :dns|:url|:oid|:x500|:nil, String"
+  def uuid5(<<uuid::binary>>, <<name::binary>>, format) do
+  	{_type, uuid} = uuid_string_to_hex_pair(uuid)
+    namebased_uuid(:sha1, <<uuid::binary, name::binary>>)
+      |> uuid_to_string format
   end
-
-  # String formatting function.
-	defp uuid_to_string(<<u0::32, u1::16, u2::16, u3::16, u4::48>>, :default) do
-		:io_lib.format("~8.16.0b-~4.16.0b-~4.16.0b-~4.16.0b-~12.16.0b",
-			             [u0, u1, u2, u3, u4])
-		  |> to_string
-	end
-	defp uuid_to_string(<<u::128>>, :hex) do
-		:io_lib.format("~32.16.0b", [u])
-		  |> to_string
-	end
-	defp uuid_to_string(u, :urn) do
-		@urn <> uuid_to_string(u, :default)
-	end
-	defp uuid_to_string(_u, format) do
-    raise ArgumentError, message: "Invalid format " <> to_string(format) <>
-                                  "; Expected: :default|:hex|:urn"
-	end
+  def uuid5(_, _, _) do
+    raise ArgumentError, message:
+    "Invalid argument; Expected: :dns|:url|:oid|:x500|:nil OR uuid, String"
+  end
 
   #
   # Internal utility functions.
   #
 
+  # Convert UUID bytes to String.
+  defp uuid_to_string(<<u0::32, u1::16, u2::16, u3::16, u4::48>>, :default) do
+    :io_lib.format("~8.16.0b-~4.16.0b-~4.16.0b-~4.16.0b-~12.16.0b",
+                   [u0, u1, u2, u3, u4])
+      |> to_string
+  end
+  defp uuid_to_string(<<u::128>>, :hex) do
+    :io_lib.format("~32.16.0b", [u])
+      |> to_string
+  end
+  defp uuid_to_string(u, :urn) do
+    @urn <> uuid_to_string(u, :default)
+  end
+  defp uuid_to_string(_u, format) do
+    raise ArgumentError, message:
+    "Invalid format " <> to_string(format) <> "; Expected: :default|:hex|:urn"
+  end
+
+  # Extract the type (:default etc) and pure hex string from a UUID String.
+  defp uuid_string_to_hex_pair(<<uuid::binary>>) do
+  	uuid = String.downcase(uuid)
+    case uuid do
+      <<u0::64, "-", u1::32, "-", u2::32, "-", u3::32, "-", u4::96>> ->
+        {:default, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
+      <<u0::256>> ->
+        {:hex, <<u0::256>>}
+      <<@urn, u0::64, "-", u1::32, "-", u2::32, "-", u3::32, "-", u4::96>> ->
+        {:urn, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
+      _ ->
+        raise ArgumentError, message: "Invalid argument; Not a valid UUID"
+    end
+  end
+  defp uuid_string_to_hex_pair(_) do
+    raise ArgumentError, message: "Invalid argument; Not a valid UUID"
+  end
+
   # Get unix epoch as a 60-bit timestamp.
-	defp uuid1_time() do
-		{mega_sec, sec, micro_sec} = :erlang.now()
+  defp uuid1_time() do
+    {mega_sec, sec, micro_sec} = :erlang.now()
     epoch = (mega_sec * 1000000000000 + sec * 1000000 + micro_sec)
     timestamp = @nanosec_intervals_offset + @nanosec_intervals_factor * epoch
-		<<timestamp::60>>
-	end
+    <<timestamp::60>>
+  end
 
   # Generate random clock sequence.
-	defp uuid1_clockseq() do
-		pid_sum = :erlang.phash2(:erlang.self())
+  defp uuid1_clockseq() do
+    pid_sum = :erlang.phash2(:erlang.self())
     <<n0::32, n1::32, n2::32>> = :crypto.rand_bytes(12)
     now_xor_pid = {n0 ^^^ pid_sum, n1 ^^^ pid_sum, n2 ^^^ pid_sum}
     :random.seed(now_xor_pid)
     rnd = :random.uniform(2 <<< 14 - 1)
     <<rnd::14>>
-	end
+  end
 
   # Get local IEEE 802 (MAC) address, or a random node id if it can't be found.
   defp uuid1_node() do
