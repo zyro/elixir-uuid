@@ -78,7 +78,7 @@ iex> UUID.uuid5(:dns, "my.domain.com", :default)
 ```
 
 `:hex` is a valid hex string, corresponding to the standard UUID without the `-` (dash) characters:
-```
+```elixir
 iex> UUID.uuid4(:hex)
 "3c69679f774b4fb180c17b29c6e7d0a0"
 ```
