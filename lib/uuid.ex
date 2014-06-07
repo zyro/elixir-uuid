@@ -34,18 +34,17 @@ defmodule UUID do
     [uuid: "da55ad7a21334017445da3e25682e4e8",
      type: :hex,
      version: 4,
-     variant: :rfc4122]
+     variant: :reserved_ncs]
 
     iex> UUID.info("urn:uuid:968dd402-edc8-11e3-568c-14109ff1a304")
     [uuid: "urn:uuid:968dd402-edc8-11e3-568c-14109ff1a304",
      type: :urn,
      version: 1,
-     variant: :rfc4122]
+     variant: :reserved_ncs]
 
   """
   def info(<<uuid::binary>> = original) do
-    {type, uuid} = uuid_string_to_hex_pair(uuid)
-    {:ok, [uuid], []} = :io_lib.fread('~16u', to_char_list(uuid))
+    {type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = <<uuid::128>>
     [uuid: original,
      type: type,
@@ -130,13 +129,13 @@ defmodule UUID do
       |> uuid_to_string format
   end
   def uuid3(<<uuid::binary>>, <<name::binary>>, format) do
-    {_type, uuid} = uuid_string_to_hex_pair(uuid)
-    namebased_uuid(:md5, <<uuid::binary, name::binary>>)
+    {_type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
+    namebased_uuid(:md5, <<uuid::128, name::binary>>)
       |> uuid_to_string format
   end
   def uuid3(_, _, _) do
     raise ArgumentError, message:
-    "Invalid argument; Expected: :dns|:url|:oid|:x500|:nil OR uuid, String"
+    "Invalid argument; Expected: :dns|:url|:oid|:x500|:nil OR String, String"
   end
 
   @doc """
@@ -210,13 +209,13 @@ defmodule UUID do
       |> uuid_to_string format
   end
   def uuid5(<<uuid::binary>>, <<name::binary>>, format) do
-    {_type, uuid} = uuid_string_to_hex_pair(uuid)
-    namebased_uuid(:sha1, <<uuid::binary, name::binary>>)
+    {_type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
+    namebased_uuid(:sha1, <<uuid::128, name::binary>>)
       |> uuid_to_string format
   end
   def uuid5(_, _, _) do
     raise ArgumentError, message:
-    "Invalid argument; Expected: :dns|:url|:oid|:x500|:nil OR uuid, String"
+    "Invalid argument; Expected: :dns|:url|:oid|:x500|:nil OR String, String"
   end
 
   #
@@ -233,30 +232,36 @@ defmodule UUID do
     :io_lib.format("~32.16.0b", [u])
       |> to_string
   end
-  defp uuid_to_string(u, :urn) do
-    @urn <> uuid_to_string(u, :default)
+  defp uuid_to_string(<<u::128>>, :urn) do
+    @urn <> uuid_to_string(<<u::128>>, :default)
   end
   defp uuid_to_string(_u, format) do
     raise ArgumentError, message:
     "Invalid format " <> to_string(format) <> "; Expected: :default|:hex|:urn"
   end
 
-  # Extract the type (:default etc) and pure hex string from a UUID String.
+  # Extract the type (:default etc) and pure byte value from a UUID String.
   defp uuid_string_to_hex_pair(<<uuid::binary>>) do
     uuid = String.downcase(uuid)
-    case uuid do
+    {type, hex_str} = case uuid do
       <<u0::64, "-", u1::32, "-", u2::32, "-", u3::32, "-", u4::96>> ->
         {:default, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
-      <<u0::256>> ->
-        {:hex, <<u0::256>>}
+      <<u::256>> ->
+        {:hex, <<u::256>>}
       <<@urn, u0::64, "-", u1::32, "-", u2::32, "-", u3::32, "-", u4::96>> ->
         {:urn, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
       _ ->
-        raise ArgumentError, message: "Invalid argument; Not a valid UUID"
+        raise ArgumentError, message:
+        "Invalid argument; Not a valid UUID: " <> uuid
     end
-  end
-  defp uuid_string_to_hex_pair(_) do
-    raise ArgumentError, message: "Invalid argument; Not a valid UUID"
+    fread = :io_lib.fread('~16u', to_char_list(hex_str))
+    case fread do
+      {:ok, [hex_int], []} ->
+        {type, <<hex_int::128>>}
+      _ ->
+        raise ArgumentError, message:
+        "Invalid argument; Not a valid UUID: " <> uuid
+    end
   end
 
   # Get unix epoch as a 60-bit timestamp.
