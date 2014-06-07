@@ -5,14 +5,21 @@ UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 412
 
 ### Installation
 
-Add as a dependency to your `mix.exs` file:
+Add as a dependency to your `mix.exs` file.
+
+Through [Hex.pm](https://hex.pm/):
 ```elixir
 defp deps do
-  [{:uuid, github: "zyro/elixir-uuid"}]
+  [ { :uuid, "~> 0.1.0" } ]
 end
 ```
 
-_Coming soon to [Hex.pm](https://hex.pm/)._
+Directly from GitHub:
+```elixir
+defp deps do
+  [ { :uuid, github: "zyro/elixir-uuid" } ]
+end
+```
 
 ### UUID v1
 
