@@ -62,16 +62,16 @@ defmodule UUID do
   ## Examples
 
     iex> UUID.uuid1()
-    "2fd5fcba-ed70-11e3-b7e3-1f299fdda3d4"
+    "cdfdaf44-ee35-11e3-846b-14109ff1a304"
 
     iex> UUID.uuid1(:default)
-    "2fd5fcba-ed70-11e3-b7e3-1f299fdda3d4"
+    "cdfdaf44-ee35-11e3-846b-14109ff1a304"
 
-    iex> UUID.uuid1(:hex)
-    "2fd5fcbaed7011e3b7e31f299fdda3d4"
+    iex> UUID.uuid1(:hex)    
+    "cdfdaf44ee3511e3846b14109ff1a304"
 
     iex> UUID.uuid1(:urn)
-    "urn:uuid:2fd5fcba-ed70-11e3-b7e3-1f299fdda3d4"
+    "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
 
   """
   def uuid1(format \\ :default) do
@@ -104,8 +104,8 @@ defmodule UUID do
     iex> UUID.uuid3(:dns, "my.domain.com", :urn)
     "urn:uuid:eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
 
-    iex> UUID.uuid3("9176cde7-42a6-5f1d-a840-124e858a3311", "my.domain.com")
-    "4ee0abbf-7add-3371-8bd5-6818256899d4"
+    iex> UUID.uuid3("cdfdaf44-ee35-11e3-846b-14109ff1a304", "my.domain.com")
+    "8808f33a-3e11-3708-919e-15fba88908db"
 
   """
   def uuid3(:dns, <<name::binary>>, format \\ :default) do
@@ -145,16 +145,16 @@ defmodule UUID do
   ## Examples
 
     iex> UUID.uuid4()
-    "3c69679f-774b-4fb1-80c1-7b29c6e7d0a0"
+    "fb49a0ec-d60c-4d20-9264-3b4cfe272106"
 
     iex> UUID.uuid4(:default)
-    "3c69679f-774b-4fb1-80c1-7b29c6e7d0a0"
+    "fb49a0ec-d60c-4d20-9264-3b4cfe272106"
 
     iex> UUID.uuid4(:hex)
-    "3c69679f774b4fb180c17b29c6e7d0a0"
+    "fb49a0ecd60c4d2092643b4cfe272106"
 
     iex> UUID.uuid4(:urn)
-    "urn:uuid:3c69679f-774b-4fb1-80c1-7b29c6e7d0a0"
+    "urn:uuid:fb49a0ec-d60c-4d20-9264-3b4cfe272106"
 
   """
   def uuid4(format \\ :default) do
@@ -184,8 +184,8 @@ defmodule UUID do
     iex> UUID.uuid5(:dns, "my.domain.com", :urn)
     "urn:uuid:ae119419-7776-563d-b6e8-8a177abccc7a"
 
-    iex> UUID.uuid5("ae119419-7776-563d-b6e8-8a177abccc7a", "my.domain.com")
-    "9176cde7-42a6-5f1d-a840-124e858a3311"
+    iex> UUID.uuid5("fb49a0ec-d60c-4d20-9264-3b4cfe272106", "my.domain.com")
+    "822cab19-df58-5eb4-98b5-c96c15c76d32"
 
   """
   def uuid5(:dns, <<name::binary>>, format \\ :default) do

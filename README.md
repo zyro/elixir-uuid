@@ -20,7 +20,7 @@ Generated using a combination of time since the west adopted the gregorian calen
 
 ```elixir
 iex> UUID.uuid1()
-"2fd5fcba-ed70-11e3-b7e3-1f299fdda3d4"
+"5976423a-ee35-11e3-8569-14109ff1a304"
 ```
 
 ### UUID v3
@@ -31,8 +31,8 @@ Generated using the MD5 hash of a name and either a namespace atom or an existin
 iex> UUID.uuid3(:dns, "my.domain.com")
 "eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
 
-iex> UUID.uuid3("9176cde7-42a6-5f1d-a840-124e858a3311", "my.domain.com")
-"4ee0abbf-7add-3371-8bd5-6818256899d4"
+iex> UUID.uuid3("5976423a-ee35-11e3-8569-14109ff1a304", "my.domain.com")
+"0609d667-944c-3c2d-9d09-18af5c58c8fb"
 ```
 
 ### UUID v4
@@ -41,7 +41,7 @@ Generated based on pseudo-random bytes.
 
 ```elixir
 iex> UUID.uuid4()
-"3c69679f-774b-4fb1-80c1-7b29c6e7d0a0"
+"fcfe5f21-8a08-4c9a-9f97-29d2fd6a27b9"
 ```
 
 ### UUID v5
@@ -52,8 +52,8 @@ Generated using the SHA1 hash of a name and either a namespace atom or an existi
 iex> UUID.uuid5(:dns, "my.domain.com")
 "ae119419-7776-563d-b6e8-8a177abccc7a"
 
-iex> UUID.uuid5("ae119419-7776-563d-b6e8-8a177abccc7a", "my.domain.com")
-"9176cde7-42a6-5f1d-a840-124e858a3311"
+iex> UUID.uuid5("fcfe5f21-8a08-4c9a-9f97-29d2fd6a27b9", "my.domain.com")
+"b8e85535-761a-586f-9c04-0fb0df2cbe84"
 ```
 
 ### Formatting
@@ -80,13 +80,13 @@ iex> UUID.uuid5(:dns, "my.domain.com", :default)
 `:hex` is a valid hex string, corresponding to the standard UUID without the `-` (dash) characters:
 ```elixir
 iex> UUID.uuid4(:hex)
-"3c69679f774b4fb180c17b29c6e7d0a0"
+"19be859d0c1f4a7f95ddced995037350"
 ```
 
 `:urn` is a standard UUID representation prefixed with the UUID URN:
 ```elixir
 iex> UUID.uuid1(:urn)
-"urn:uuid:2fd5fcba-ed70-11e3-b7e3-1f299fdda3d4"
+"urn:uuid:b7483bde-ee35-11e3-8daa-14109ff1a304"
 ```
 
 ### Utility functions
