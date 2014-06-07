@@ -20,8 +20,7 @@ defmodule UUID do
   Inspect a UUID and return information about its type, version and variant.
 
   Timestamp portion is not checked to see if it's in the future, and therefore
-  not yet assignable. See "Validation mechanism" in the Namespace Registration
-  Template section of RFC 4122.
+  not yet assignable. See "Validation mechanism" in section 3 of RFC 4122.
 
   ## Examples
 
