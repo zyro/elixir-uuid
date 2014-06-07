@@ -5,23 +5,16 @@ defmodule UUID do
   See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
   """
 
-  # Offset between 15 October 1582 and 1 January 1970.
-  @nanosec_intervals_offset 122192928000000000
-  # Microseconds to nanoseconds factor.
-  @nanosec_intervals_factor 10
+  @nanosec_intervals_offset 122192928000000000 # 15 Oct 1582 to 1 Jan 1970.
+  @nanosec_intervals_factor 10 # Microseconds to nanoseconds factor.
 
-  # Variant, corresponds to variant 1 0 of RFC 4122.
-  @variant10 2
-  # UUID v1 identifier.
-  @uuid_v1 1
-  # UUID v3 identifier.
-  @uuid_v3 3
-  # UUID v4 identifier.
-  @uuid_v4 4
-  # UUID v5 identifier.
-  @uuid_v5 5
+  @variant10 2 # Variant, corresponds to variant 1 0 of RFC 4122.
+  @uuid_v1 1 # UUID v1 identifier.
+  @uuid_v3 3 # UUID v3 identifier.
+  @uuid_v4 4 # UUID v4 identifier.
+  @uuid_v5 5 # UUID v5 identifier.
 
-  @urn "urn:uuid:"
+  @urn "urn:uuid:" # UUID URN prefix.
 
   @doc """
   Inspect a UUID and return information about its type, version and variant.
@@ -52,8 +45,7 @@ defmodule UUID do
   def info(<<uuid::binary>> = original) do
     {type, uuid} = uuid_string_to_hex_pair(uuid)
     {:ok, [uuid], []} = :io_lib.fread('~16u', to_char_list(uuid))
-    uuid = <<uuid::128>>
-    <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = uuid
+    <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = <<uuid::128>>
     [uuid: original,
      type: type,
      version: version,
