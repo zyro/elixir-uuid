@@ -59,6 +59,8 @@ defmodule UUID do
   Generate a new UUID v1. This version uses a combination of one or more of:
   unix epoch, random bytes, pid hash, and hardware address.
 
+  Optionally takes two parameters: a 14 bit clock sequence and a 48 bit node id.
+
   ## Examples
 
     iex> UUID.uuid1()
@@ -75,12 +77,19 @@ defmodule UUID do
 
   """
   def uuid1(format \\ :default) do
+    uuid1(uuid1_clockseq(), uuid1_node(), format)
+  end
+
+  def uuid1(<<clock_seq::14>>, <<node::48>>, format \\ :default) do
     <<time_hi::12, time_mid::16, time_low::32>> = uuid1_time()
-    <<clock_seq_hi::6, clock_seq_low::8>> = uuid1_clockseq()
-    <<node::48>> = uuid1_node()
+    <<clock_seq_hi::6, clock_seq_low::8>> = <<clock_seq::14>>
     <<time_low::32, time_mid::16, @uuid_v1::4, time_hi::12, @variant10::2,
       clock_seq_hi::6, clock_seq_low::8, node::48>>
       |> uuid_to_string format
+  end
+  def uuid1(_, _, _) do
+    raise ArgumentError, message:
+    "Invalid argument; Expected: <<clock_seq::14>>, <<node::48>>"
   end
 
   @doc """
