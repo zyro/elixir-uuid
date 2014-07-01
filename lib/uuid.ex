@@ -17,27 +17,34 @@ defmodule UUID do
   @urn "urn:uuid:" # UUID URN prefix.
 
   @doc """
-  Inspect a UUID and return information about its type, version and variant.
+  Inspect a UUID and return information about its 128-bit binary content, type,
+  version and variant.
 
   Timestamp portion is not checked to see if it's in the future, and therefore
   not yet assignable. See "Validation mechanism" in section 3 of RFC 4122.
 
   ## Examples
 
-    iex> UUID.info("4995555a-1361-4b45-5803-9ef16250956c")
-    [uuid: "4995555a-1361-4b45-5803-9ef16250956c",
+    iex> UUID.info("870df8e8-3107-4487-8316-81e089b8c2cf")
+    [uuid: "870df8e8-3107-4487-8316-81e089b8c2cf",
+     binary: <<135, 13, 248, 232, 49, 7, 68, 135, 131,
+                22, 129, 224, 137, 184, 194, 207>>,
      type: :default,
      version: 4,
      variant: :rfc4122]
 
     iex> UUID.info("8ea1513df8a14dea9bea6b8f4b5b6e73")
     [uuid: "8ea1513df8a14dea9bea6b8f4b5b6e73",
+     binary: <<142, 161, 81, 61, 248, 161, 77, 234, 155,
+                234, 107, 143, 75, 91, 110, 115>>,
      type: :hex,
      version: 4,
      variant: :rfc4122]
 
     iex> UUID.info("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
     [uuid: "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304",
+     binary: <<239, 27, 26, 40, 238, 52, 17, 227, 136,
+                19, 20, 16, 159, 241, 163, 4>>,
      type: :urn,
      version: 1,
      variant: :rfc4122]
@@ -47,6 +54,7 @@ defmodule UUID do
     {type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = <<uuid::128>>
     [uuid: original,
+     binary: <<uuid::128>>,
      type: type,
      version: version,
      variant: variant(<<v0, v1, v2>>)]
