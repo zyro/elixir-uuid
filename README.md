@@ -8,7 +8,7 @@ UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 412
 Releases are published through [hex.pm](https://hex.pm/packages/uuid). Add as a dependency in your `mix.exs` file:
 ```elixir
 defp deps do
-  [ { :uuid, "~> 0.1.2" } ]
+  [ { :uuid, "~> 0.1.3" } ]
 end
 ```
 

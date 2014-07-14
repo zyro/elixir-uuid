@@ -88,7 +88,8 @@ defmodule UUID do
     uuid1(uuid1_clockseq(), uuid1_node(), format)
   end
 
-  def uuid1(<<clock_seq::14>>, <<node::48>>, format \\ :default) do
+  def uuid1(clock_seq, node, format \\ :default)
+  def uuid1(<<clock_seq::14>>, <<node::48>>, format) do
     <<time_hi::12, time_mid::16, time_low::32>> = uuid1_time()
     <<clock_seq_hi::6, clock_seq_low::8>> = <<clock_seq::14>>
     <<time_low::32, time_mid::16, @uuid_v1::4, time_hi::12, @variant10::2,
@@ -125,7 +126,8 @@ defmodule UUID do
     "8808f33a-3e11-3708-919e-15fba88908db"
 
   """
-  def uuid3(:dns, <<name::binary>>, format \\ :default) do
+  def uuid3(namespace_or_uuid, name, format \\ :default)
+  def uuid3(:dns, <<name::binary>>, format) do
     namebased_uuid(:md5, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
       |> uuid_to_string format
   end
@@ -205,7 +207,8 @@ defmodule UUID do
     "822cab19-df58-5eb4-98b5-c96c15c76d32"
 
   """
-  def uuid5(:dns, <<name::binary>>, format \\ :default) do
+  def uuid5(namespace_or_uuid, name, format \\ :default)
+  def uuid5(:dns, <<name::binary>>, format) do
     namebased_uuid(:sha1, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
       |> uuid_to_string format
   end
