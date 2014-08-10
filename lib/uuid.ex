@@ -353,7 +353,7 @@ defmodule UUID do
   defp variant(<<1, 0, _v>>) do
     :rfc4122
   end
-  defp variant(<<0, _v::[2, binary]>>) do
+  defp variant(<<0, _v::2-binary>>) do
     :reserved_ncs
   end
   defp variant(_) do
