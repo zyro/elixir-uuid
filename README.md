@@ -5,10 +5,12 @@ UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 412
 
 ### Installation
 
+The latest version is `0.1.5` and requires Elixir 0.15.0 and up. New releases may change this minimum compatible version depending on breaking language changes.
+
 Releases are published through [hex.pm](https://hex.pm/packages/uuid). Add as a dependency in your `mix.exs` file:
 ```elixir
 defp deps do
-  [ { :uuid, "~> 0.1.4" } ]
+  [ { :uuid, "~> 0.1.5" } ]
 end
 ```
 
