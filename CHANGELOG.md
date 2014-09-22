@@ -25,7 +25,7 @@ Changelog
 
 ### v0.1.1, 14 Jun 2014, Elixir `~> 0.14.0`
 
-* [Enhancement] `UUID.uuid1/1` now allows optional preset `clock_seq` and `node_id`.
+* [Enhancement] Added `UUID.uuid1/3` which allows optional preset `clock_seq` and `node_id`, the last argument is still an optional format atom.
 
 ### v0.1.0, 07 Jun 2014, Elixir `== 0.13.3 or ~> 0.14.0-dev`
 
