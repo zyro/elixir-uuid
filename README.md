@@ -1,4 +1,4 @@
-Elixir UUID
+Elixir UUID [![hex.pm version](https://img.shields.io/hexpm/v/uuid.svg?style=flat)](https://hex.pm/packages/uuid) [![hex.pm downloads](https://img.shields.io/hexpm/dt/uuid.svg?style=flat)](https://hex.pm/packages/uuid) [![travis.ci build status](https://img.shields.io/travis/zyro/elixir-uuid.svg?style=flat)](https://travis-ci.org/zyro/elixir-uuid)
 ===========
 
 UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
