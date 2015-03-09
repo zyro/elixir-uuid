@@ -5,12 +5,12 @@ UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 412
 
 ### Installation
 
-The latest version is `0.1.5` and requires Elixir 0.15.0 and up. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
+The latest version is `1.0.0` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
 
 Releases are published through [hex.pm](https://hex.pm/packages/uuid). Add as a dependency in your `mix.exs` file:
 ```elixir
 defp deps do
-  [ { :uuid, "~> 0.1.5" } ]
+  [ { :uuid, "~> 1.0" } ]
 end
 ```
 
@@ -91,23 +91,23 @@ iex> UUID.uuid1(:urn)
 
 ### Utility functions
 
-Use `UUID.info/1` to get a [keyword list](http://elixir-lang.org/getting_started/7.html#toc_1) containing information about the given UUID. An `ArgumentError` is raised if the argument is not a valid UUID string.
+Use `UUID.info!/1` to get a [keyword list](http://elixir-lang.org/getting_started/7.html#toc_1) containing information about the given UUID. An `ArgumentError` is raised if the argument is not a valid UUID string.
 ```elixir
-iex> UUID.info("870df8e8-3107-4487-8316-81e089b8c2cf")
+iex> UUID.info!("870df8e8-3107-4487-8316-81e089b8c2cf")
 [uuid: "870df8e8-3107-4487-8316-81e089b8c2cf",
  binary: <<135, 13, 248, 232, 49, 7, 68, 135, 131, 22, 129, 224, 137, 184, 194, 207>>,
  type: :default,
  version: 4,
  variant: :rfc4122]
 
-iex> UUID.info("8ea1513df8a14dea9bea6b8f4b5b6e73")
+iex> UUID.info!("8ea1513df8a14dea9bea6b8f4b5b6e73")
 [uuid: "8ea1513df8a14dea9bea6b8f4b5b6e73",
  binary: <<142, 161, 81, 61, 248, 161, 77, 234, 155, 234, 107, 143, 75, 91, 110, 115>>,
  type: :hex,
  version: 4,
  variant: :rfc4122]
 
-iex> UUID.info("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
+iex> UUID.info!("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
 [uuid: "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304",
  binary: <<239, 27, 26, 40, 238, 52, 17, 227, 136, 19, 20, 16, 159, 241, 163, 4>>,
  type: :urn,
@@ -115,14 +115,47 @@ iex> UUID.info("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
  variant: :rfc4122]
 ```
 
+Use `UUID.string_to_binary!/1` to convert a valid UUID string to its raw binary equivalent. An `ArgumentError` is raised if the argument is not a valid UUID string.
+```elixir
+iex> UUID.string_to_binary("870df8e8-3107-4487-8316-81e089b8c2cf")
+<<135, 13, 248, 232, 49, 7, 68, 135, 131,
+            22, 129, 224, 137, 184, 194, 207>>
+
+iex> UUID.string_to_binary("8ea1513df8a14dea9bea6b8f4b5b6e73")
+<<142, 161, 81, 61, 248, 161, 77, 234, 155,
+            234, 107, 143, 75, 91, 110, 115>>
+
+
+iex> UUID.string_to_binary("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
+<<239, 27, 26, 40, 238, 52, 17, 227, 136,
+            19, 20, 16, 159, 241, 163, 4>>
+```
+
+Use `UUID.binary_to_string!/2` to convert valid UUID binary data to a String representation, with an optional format similar to the generator functions above. An `ArgumentError` is raised if the argument is valid UUID binary data.
+```elixir
+iex> UUID.binary_to_string(<<135, 13, 248, 232, 49, 7, 68, 135, 131,
+            22, 129, 224, 137, 184, 194, 207>>)
+"870df8e8-3107-4487-8316-81e089b8c2cf"
+
+iex> UUID.binary_to_string(<<142, 161, 81, 61, 248, 161, 77, 234, 155,
+            234, 107, 143, 75, 91, 110, 115>>, :hex)
+"8ea1513df8a14dea9bea6b8f4b5b6e73"
+
+iex> UUID.binary_to_string(<<239, 27, 26, 40, 238, 52, 17, 227, 136,
+            19, 20, 16, 159, 241, 163, 4>>, :urn)
+"urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"
+```
+
 ### Attribution
 
 Some code ported from [avtobiff/erlang-uuid](https://github.com/avtobiff/erlang-uuid).
 
+Some helper functions from [rjsamson/hexate](https://github.com/rjsamson/hexate).
+
 ### License
 
 ```
-   Copyright 2014 Andrei Mihu
+   Copyright 2014-2015 Andrei Mihu
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

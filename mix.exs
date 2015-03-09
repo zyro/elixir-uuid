@@ -3,8 +3,8 @@ defmodule UUID.Mixfile do
 
   def project do
     [app: :uuid,
-     version: "0.1.5",
-     elixir: ">= 0.15.0",
+     version: "1.0.0",
+     elixir: "~> 1.0",
      description: description,
      package: package,
      deps: deps]

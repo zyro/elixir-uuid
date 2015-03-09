@@ -23,9 +23,15 @@ defmodule UUID do
   Timestamp portion is not checked to see if it's in the future, and therefore
   not yet assignable. See "Validation mechanism" in section 3 of RFC 4122.
 
+  Will raise an ArgumentError if the given string is not a UUID representation
+  in a format like:
+  "870df8e8-3107-4487-8316-81e089b8c2cf",
+  "8ea1513df8a14dea9bea6b8f4b5b6e73",
+  or "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304".
+
   ## Examples
 
-    iex> UUID.info("870df8e8-3107-4487-8316-81e089b8c2cf")
+    iex> UUID.info!("870df8e8-3107-4487-8316-81e089b8c2cf")
     [uuid: "870df8e8-3107-4487-8316-81e089b8c2cf",
      binary: <<135, 13, 248, 232, 49, 7, 68, 135, 131,
                 22, 129, 224, 137, 184, 194, 207>>,
@@ -33,7 +39,7 @@ defmodule UUID do
      version: 4,
      variant: :rfc4122]
 
-    iex> UUID.info("8ea1513df8a14dea9bea6b8f4b5b6e73")
+    iex> UUID.info!("8ea1513df8a14dea9bea6b8f4b5b6e73")
     [uuid: "8ea1513df8a14dea9bea6b8f4b5b6e73",
      binary: <<142, 161, 81, 61, 248, 161, 77, 234, 155,
                 234, 107, 143, 75, 91, 110, 115>>,
@@ -41,7 +47,7 @@ defmodule UUID do
      version: 4,
      variant: :rfc4122]
 
-    iex> UUID.info("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
+    iex> UUID.info!("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
     [uuid: "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304",
      binary: <<239, 27, 26, 40, 238, 52, 17, 227, 136,
                 19, 20, 16, 159, 241, 163, 4>>,
@@ -50,7 +56,7 @@ defmodule UUID do
      variant: :rfc4122]
 
   """
-  def info(<<uuid::binary>> = original) do
+  def info!(<<uuid::binary>> = original) do
     {type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = <<uuid::128>>
     [uuid: original,
@@ -59,7 +65,68 @@ defmodule UUID do
      version: version,
      variant: variant(<<v0, v1, v2>>)]
   end
-  def info(_) do
+  def info!(_) do
+    raise ArgumentError, message: "Invalid argument; Expected: String"
+  end
+
+  @doc """
+  Convert binary UUID data to a string.
+
+  Will raise an ArgumentError if the given binary is not valid UUID data, or
+  the format argument is not one of: :default, :hex, or :urn.
+
+  ## Examples
+
+    iex> UUID.binary_to_string(<<135, 13, 248, 232, 49, 7, 68, 135, 131,
+                22, 129, 224, 137, 184, 194, 207>>)
+    "870df8e8-3107-4487-8316-81e089b8c2cf"
+
+    iex> UUID.binary_to_string(<<142, 161, 81, 61, 248, 161, 77, 234, 155,
+                234, 107, 143, 75, 91, 110, 115>>, :hex)
+    "8ea1513df8a14dea9bea6b8f4b5b6e73"
+
+    iex> UUID.binary_to_string(<<239, 27, 26, 40, 238, 52, 17, 227, 136,
+                19, 20, 16, 159, 241, 163, 4>>, :urn)
+    "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"
+
+  """
+  def binary_to_string!(uuid, format \\ :default)
+  def binary_to_string!(<<uuid::binary>>, format) do
+    uuid_to_string(<<uuid::binary>>, format)
+  end
+  def binary_to_string!(_, _) do
+    raise ArgumentError, message: "Invalid argument; Expected: <<uuid::128>>"
+  end
+
+  @doc """
+  Convert a UUID string to its binary data equivalent.
+
+  Will raise an ArgumentError if the given string is not a UUID representation
+  in a format like:
+  "870df8e8-3107-4487-8316-81e089b8c2cf",
+  "8ea1513df8a14dea9bea6b8f4b5b6e73",
+  or "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304".
+
+  ## Examples
+
+    iex> UUID.string_to_binary("870df8e8-3107-4487-8316-81e089b8c2cf")
+    <<135, 13, 248, 232, 49, 7, 68, 135, 131,
+                22, 129, 224, 137, 184, 194, 207>>
+
+    iex> UUID.string_to_binary("8ea1513df8a14dea9bea6b8f4b5b6e73")
+    <<142, 161, 81, 61, 248, 161, 77, 234, 155,
+                234, 107, 143, 75, 91, 110, 115>>
+
+    iex> UUID.string_to_binary("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
+    <<239, 27, 26, 40, 238, 52, 17, 227, 136,
+                19, 20, 16, 159, 241, 163, 4>>
+
+  """
+  def string_to_binary!(<<uuid::binary>>) do
+    {_type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
+    <<uuid::128>>
+  end
+  def string_to_binary!(_) do
     raise ArgumentError, message: "Invalid argument; Expected: String"
   end
 
@@ -244,43 +311,51 @@ defmodule UUID do
 
   # Convert UUID bytes to String.
   defp uuid_to_string(<<u0::32, u1::16, u2::16, u3::16, u4::48>>, :default) do
-    :io_lib.format("~8.16.0b-~4.16.0b-~4.16.0b-~4.16.0b-~12.16.0b",
-                   [u0, u1, u2, u3, u4])
-      |> to_string
+    [binary_to_hex_list(<<u0::32>>), ?-, binary_to_hex_list(<<u1::16>>), ?-,
+     binary_to_hex_list(<<u2::16>>), ?-, binary_to_hex_list(<<u3::16>>), ?-,
+     binary_to_hex_list(<<u4::48>>)]
+      |> IO.iodata_to_binary
   end
   defp uuid_to_string(<<u::128>>, :hex) do
-    :io_lib.format("~32.16.0b", [u])
-      |> to_string
+    binary_to_hex_list(<<u::128>>)
+      |> IO.iodata_to_binary
   end
   defp uuid_to_string(<<u::128>>, :urn) do
     @urn <> uuid_to_string(<<u::128>>, :default)
   end
+  defp uuid_to_string(_u, format) when format in [:default, :hex, :urn] do
+    raise ArgumentError, message:
+    "Invalid binary data; Expected: <<uuid::128>>"
+  end
   defp uuid_to_string(_u, format) do
     raise ArgumentError, message:
-    "Invalid format " <> to_string(format) <> "; Expected: :default|:hex|:urn"
+    "Invalid format #{format}; Expected: :default|:hex|:urn"
   end
 
   # Extract the type (:default etc) and pure byte value from a UUID String.
   defp uuid_string_to_hex_pair(<<uuid::binary>>) do
     uuid = String.downcase(uuid)
     {type, hex_str} = case uuid do
-      <<u0::64, "-", u1::32, "-", u2::32, "-", u3::32, "-", u4::96>> ->
+      <<u0::64, ?-, u1::32, ?-, u2::32, ?-, u3::32, ?-, u4::96>> ->
         {:default, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
       <<u::256>> ->
         {:hex, <<u::256>>}
-      <<@urn, u0::64, "-", u1::32, "-", u2::32, "-", u3::32, "-", u4::96>> ->
+      <<@urn, u0::64, ?-, u1::32, ?-, u2::32, ?-, u3::32, ?-, u4::96>> ->
         {:urn, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
       _ ->
         raise ArgumentError, message:
-        "Invalid argument; Not a valid UUID: " <> uuid
+          "Invalid argument; Not a valid UUID: #{uuid}"
     end
-    fread = :io_lib.fread('~16u', to_char_list(hex_str))
-    case fread do
-      {:ok, [hex_int], []} ->
-        {type, <<hex_int::128>>}
-      _ ->
+
+    try do
+      <<hex::128>> = :binary.bin_to_list(hex_str)
+        |> hex_str_to_list
+        |> IO.iodata_to_binary
+      {type, <<hex::128>>}
+    catch
+      _, _ ->
         raise ArgumentError, message:
-        "Invalid argument; Not a valid UUID: " <> uuid
+          "Invalid argument; Not a valid UUID: #{uuid}"
     end
   end
 
@@ -308,10 +383,6 @@ defmodule UUID do
     uuid1_node(ifs0)
   end
 
-  # Skip loopback adapter.
-  defp uuid1_node([{"lo", _if_config} | rest]) do
-    uuid1_node(rest)
-  end
   defp uuid1_node([{_if_name, if_config} | rest]) do
     case :lists.keyfind(:hwaddr, 1, if_config) do
       {:hwaddr, hw_addr} ->
@@ -358,6 +429,52 @@ defmodule UUID do
   end
   defp variant(_) do
     raise ArgumentError, message: "Invalid argument; Not valid variant bits"
+  end
+
+  # CBnary data to list of hex characters.
+  defp binary_to_hex_list(binary) do
+    :binary.bin_to_list(binary)
+      |> list_to_hex_str
+  end
+
+  # Hex string to hex character list.
+  defp hex_str_to_list([]) do
+    []
+  end
+  defp hex_str_to_list([x, y | tail]) do
+    [to_int(x) * 16 + to_int(y) | hex_str_to_list(tail)]
+  end
+
+  # List of hex characters to a hex character string.
+  defp list_to_hex_str([]) do
+    []
+  end
+  defp list_to_hex_str([head | tail]) do
+    to_hex_str(head) ++ list_to_hex_str(tail)
+  end
+
+  # Hex character integer to hex string.
+  defp to_hex_str(n) when n < 256 do
+    [to_hex(div(n, 16)), to_hex(rem(n, 16))]
+  end
+
+  # Integer to hex character.
+  defp to_hex(i) when i < 10 do
+    0 + i + 48
+  end
+  defp to_hex(i) when i >= 10 and i < 16 do
+    ?a + (i - 10)
+  end
+
+  # Hex character to integer.
+  defp to_int(c) when ?0 <= c and c <= ?9 do
+    c - ?0
+  end
+  defp to_int(c) when ?A <= c and c <= ?F do
+    c - ?A + 10
+  end
+  defp to_int(c) when ?a <= c and c <= ?f do
+    c - ?a + 10
   end
 
 end

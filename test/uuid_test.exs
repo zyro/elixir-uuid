@@ -6,7 +6,7 @@ defmodule UUIDTest do
       ArgumentError,
       "Invalid argument; Expected: String",
       fn ->
-        UUID.info(:not_a_uuid)
+        UUID.info!(:not_a_uuid)
       end
     )
   end
@@ -16,7 +16,7 @@ defmodule UUIDTest do
       ArgumentError,
       "Invalid argument; Not a valid UUID: not_a_uuid",
       fn ->
-        UUID.info("not_a_uuid")
+        UUID.info!("not_a_uuid")
       end
     )
   end
@@ -29,7 +29,7 @@ defmodule UUIDTest do
       line |> String.split("||") |> Enum.map(&String.strip(&1))
     test name do
       {expected, []} = Code.eval_string(unquote(expected))
-      result = UUID.info(unquote(input))
+      result = UUID.info!(unquote(input))
       assert ^expected = result
     end
   end
