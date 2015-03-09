@@ -21,45 +21,48 @@ defmodule UUID do
   version and variant.
 
   Timestamp portion is not checked to see if it's in the future, and therefore
-  not yet assignable. See "Validation mechanism" in section 3 of RFC 4122.
+  not yet assignable. See "Validation mechanism" in section 3 of
+  [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
 
-  Will raise an ArgumentError if the given string is not a UUID representation
+  Will raise an `ArgumentError` if the given string is not a UUID representation
   in a format like:
-  "870df8e8-3107-4487-8316-81e089b8c2cf",
-  "8ea1513df8a14dea9bea6b8f4b5b6e73",
-  or "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304".
+  * `"870df8e8-3107-4487-8316-81e089b8c2cf"`
+  * `"8ea1513df8a14dea9bea6b8f4b5b6e73"`
+  * `"urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"`
 
   ## Examples
 
-    iex> UUID.info!("870df8e8-3107-4487-8316-81e089b8c2cf")
-    [uuid: "870df8e8-3107-4487-8316-81e089b8c2cf",
-     binary: <<135, 13, 248, 232, 49, 7, 68, 135, 131,
-                22, 129, 224, 137, 184, 194, 207>>,
-     type: :default,
-     version: 4,
-     variant: :rfc4122]
+  ```elixir
+  iex> UUID.info!("870df8e8-3107-4487-8316-81e089b8c2cf")
+  [uuid: "870df8e8-3107-4487-8316-81e089b8c2cf",
+   binary: <<135, 13, 248, 232, 49, 7, 68, 135, 131,
+              22, 129, 224, 137, 184, 194, 207>>,
+   type: :default,
+   version: 4,
+   variant: :rfc4122]
 
-    iex> UUID.info!("8ea1513df8a14dea9bea6b8f4b5b6e73")
-    [uuid: "8ea1513df8a14dea9bea6b8f4b5b6e73",
-     binary: <<142, 161, 81, 61, 248, 161, 77, 234, 155,
-                234, 107, 143, 75, 91, 110, 115>>,
-     type: :hex,
-     version: 4,
-     variant: :rfc4122]
+  iex> UUID.info!("8ea1513df8a14dea9bea6b8f4b5b6e73")
+  [uuid: "8ea1513df8a14dea9bea6b8f4b5b6e73",
+   binary: <<142, 161, 81, 61, 248, 161, 77, 234, 155,
+              234, 107, 143, 75, 91, 110, 115>>,
+   type: :hex,
+   version: 4,
+   variant: :rfc4122]
 
-    iex> UUID.info!("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
-    [uuid: "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304",
-     binary: <<239, 27, 26, 40, 238, 52, 17, 227, 136,
-                19, 20, 16, 159, 241, 163, 4>>,
-     type: :urn,
-     version: 1,
-     variant: :rfc4122]
+  iex> UUID.info!("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
+  [uuid: "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304",
+   binary: <<239, 27, 26, 40, 238, 52, 17, 227, 136,
+              19, 20, 16, 159, 241, 163, 4>>,
+   type: :urn,
+   version: 1,
+   variant: :rfc4122]
+  ```
 
   """
-  def info!(<<uuid::binary>> = original) do
+  def info!(<<uuid::binary>> = uuid_string) do
     {type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = <<uuid::128>>
-    [uuid: original,
+    [uuid: uuid_string,
      binary: <<uuid::128>>,
      type: type,
      version: version,
@@ -73,21 +76,23 @@ defmodule UUID do
   Convert binary UUID data to a string.
 
   Will raise an ArgumentError if the given binary is not valid UUID data, or
-  the format argument is not one of: :default, :hex, or :urn.
+  the format argument is not one of: `:default`, `:hex`, or `:urn`.
 
   ## Examples
 
-    iex> UUID.binary_to_string(<<135, 13, 248, 232, 49, 7, 68, 135, 131,
-                22, 129, 224, 137, 184, 194, 207>>)
-    "870df8e8-3107-4487-8316-81e089b8c2cf"
+  ```elixir
+  iex> UUID.binary_to_string(<<135, 13, 248, 232, 49, 7, 68, 135, 131,
+              22, 129, 224, 137, 184, 194, 207>>)
+  "870df8e8-3107-4487-8316-81e089b8c2cf"
 
-    iex> UUID.binary_to_string(<<142, 161, 81, 61, 248, 161, 77, 234, 155,
-                234, 107, 143, 75, 91, 110, 115>>, :hex)
-    "8ea1513df8a14dea9bea6b8f4b5b6e73"
+  iex> UUID.binary_to_string(<<142, 161, 81, 61, 248, 161, 77, 234, 155,
+              234, 107, 143, 75, 91, 110, 115>>, :hex)
+  "8ea1513df8a14dea9bea6b8f4b5b6e73"
 
-    iex> UUID.binary_to_string(<<239, 27, 26, 40, 238, 52, 17, 227, 136,
-                19, 20, 16, 159, 241, 163, 4>>, :urn)
-    "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"
+  iex> UUID.binary_to_string(<<239, 27, 26, 40, 238, 52, 17, 227, 136,
+              19, 20, 16, 159, 241, 163, 4>>, :urn)
+  "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"
+  ```
 
   """
   def binary_to_string!(uuid, format \\ :default)
@@ -103,23 +108,25 @@ defmodule UUID do
 
   Will raise an ArgumentError if the given string is not a UUID representation
   in a format like:
-  "870df8e8-3107-4487-8316-81e089b8c2cf",
-  "8ea1513df8a14dea9bea6b8f4b5b6e73",
-  or "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304".
+  * `"870df8e8-3107-4487-8316-81e089b8c2cf"`
+  * `"8ea1513df8a14dea9bea6b8f4b5b6e73"`
+  * `"urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"`
 
   ## Examples
 
-    iex> UUID.string_to_binary("870df8e8-3107-4487-8316-81e089b8c2cf")
-    <<135, 13, 248, 232, 49, 7, 68, 135, 131,
-                22, 129, 224, 137, 184, 194, 207>>
+  ```elixir
+  iex> UUID.string_to_binary("870df8e8-3107-4487-8316-81e089b8c2cf")
+  <<135, 13, 248, 232, 49, 7, 68, 135, 131,
+              22, 129, 224, 137, 184, 194, 207>>
 
-    iex> UUID.string_to_binary("8ea1513df8a14dea9bea6b8f4b5b6e73")
-    <<142, 161, 81, 61, 248, 161, 77, 234, 155,
-                234, 107, 143, 75, 91, 110, 115>>
+  iex> UUID.string_to_binary("8ea1513df8a14dea9bea6b8f4b5b6e73")
+  <<142, 161, 81, 61, 248, 161, 77, 234, 155,
+              234, 107, 143, 75, 91, 110, 115>>
 
-    iex> UUID.string_to_binary("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
-    <<239, 27, 26, 40, 238, 52, 17, 227, 136,
-                19, 20, 16, 159, 241, 163, 4>>
+  iex> UUID.string_to_binary("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
+  <<239, 27, 26, 40, 238, 52, 17, 227, 136,
+              19, 20, 16, 159, 241, 163, 4>>
+  ```
 
   """
   def string_to_binary!(<<uuid::binary>>) do
@@ -134,27 +141,49 @@ defmodule UUID do
   Generate a new UUID v1. This version uses a combination of one or more of:
   unix epoch, random bytes, pid hash, and hardware address.
 
-  Optionally takes two parameters: a 14 bit clock sequence and a 48 bit node id.
-
   ## Examples
 
-    iex> UUID.uuid1()
-    "cdfdaf44-ee35-11e3-846b-14109ff1a304"
+  ```elixir
+  iex> UUID.uuid1()
+  "cdfdaf44-ee35-11e3-846b-14109ff1a304"
 
-    iex> UUID.uuid1(:default)
-    "cdfdaf44-ee35-11e3-846b-14109ff1a304"
+  iex> UUID.uuid1(:default)
+  "cdfdaf44-ee35-11e3-846b-14109ff1a304"
 
-    iex> UUID.uuid1(:hex)    
-    "cdfdaf44ee3511e3846b14109ff1a304"
+  iex> UUID.uuid1(:hex)    
+  "cdfdaf44ee3511e3846b14109ff1a304"
 
-    iex> UUID.uuid1(:urn)
-    "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
+  iex> UUID.uuid1(:urn)
+  "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
+  ```
 
   """
   def uuid1(format \\ :default) do
     uuid1(uuid1_clockseq(), uuid1_node(), format)
   end
 
+  @doc """
+  Generate a new UUID v1, with an existing clock sequence and node address. This
+  version uses a combination of one or more of: unix epoch, random bytes,
+  pid hash, and hardware address.
+
+  ## Examples
+
+  ```elixir
+  iex> UUID.uuid1()
+  "cdfdaf44-ee35-11e3-846b-14109ff1a304"
+
+  iex> UUID.uuid1(:default)
+  "cdfdaf44-ee35-11e3-846b-14109ff1a304"
+
+  iex> UUID.uuid1(:hex)    
+  "cdfdaf44ee3511e3846b14109ff1a304"
+
+  iex> UUID.uuid1(:urn)
+  "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
+  ```
+
+  """
   def uuid1(clock_seq, node, format \\ :default)
   def uuid1(<<clock_seq::14>>, <<node::48>>, format) do
     <<time_hi::12, time_mid::16, time_low::32>> = uuid1_time()
@@ -170,27 +199,30 @@ defmodule UUID do
 
   @doc """
   Generate a new UUID v3. This version uses an MD5 hash of fixed value (chosen
-  based on a namespace atom - see Appendix C of RFC 4122) and a name value. Can
-  also be given an existing UUID String instead of a namespace atom.
+  based on a namespace atom - see Appendix C of
+  [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt) and a name value. Can also be
+  given an existing UUID String instead of a namespace atom.
 
-  Accepted arguments are: :dns|:url|:oid|:x500|:nil OR uuid, String
+  Accepted arguments are: `:dns`|`:url`|`:oid`|`:x500`|`:nil` OR uuid, String
 
   ## Examples
 
-    iex> UUID.uuid3(:dns, "my.domain.com")
-    "eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
+  ```elixir
+  iex> UUID.uuid3(:dns, "my.domain.com")
+  "eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
 
-    iex> UUID.uuid3(:dns, "my.domain.com", :default)
-    "eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
+  iex> UUID.uuid3(:dns, "my.domain.com", :default)
+  "eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
 
-    iex> UUID.uuid3(:dns, "my.domain.com", :hex)
-    "eecf4c2bf6e53ae3bef71ea09f91d3e7"
+  iex> UUID.uuid3(:dns, "my.domain.com", :hex)
+  "eecf4c2bf6e53ae3bef71ea09f91d3e7"
 
-    iex> UUID.uuid3(:dns, "my.domain.com", :urn)
-    "urn:uuid:eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
+  iex> UUID.uuid3(:dns, "my.domain.com", :urn)
+  "urn:uuid:eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
 
-    iex> UUID.uuid3("cdfdaf44-ee35-11e3-846b-14109ff1a304", "my.domain.com")
-    "8808f33a-3e11-3708-919e-15fba88908db"
+  iex> UUID.uuid3("cdfdaf44-ee35-11e3-846b-14109ff1a304", "my.domain.com")
+  "8808f33a-3e11-3708-919e-15fba88908db"
+  ```
 
   """
   def uuid3(namespace_or_uuid, name, format \\ :default)
@@ -230,17 +262,19 @@ defmodule UUID do
 
   ## Examples
 
-    iex> UUID.uuid4()
-    "fb49a0ec-d60c-4d20-9264-3b4cfe272106"
+  ```elixir
+  iex> UUID.uuid4()
+  "fb49a0ec-d60c-4d20-9264-3b4cfe272106"
 
-    iex> UUID.uuid4(:default)
-    "fb49a0ec-d60c-4d20-9264-3b4cfe272106"
+  iex> UUID.uuid4(:default)
+  "fb49a0ec-d60c-4d20-9264-3b4cfe272106"
 
-    iex> UUID.uuid4(:hex)
-    "fb49a0ecd60c4d2092643b4cfe272106"
+  iex> UUID.uuid4(:hex)
+  "fb49a0ecd60c4d2092643b4cfe272106"
 
-    iex> UUID.uuid4(:urn)
-    "urn:uuid:fb49a0ec-d60c-4d20-9264-3b4cfe272106"
+  iex> UUID.uuid4(:urn)
+  "urn:uuid:fb49a0ec-d60c-4d20-9264-3b4cfe272106"
+  ```
 
   """
   def uuid4(format \\ :default) do
@@ -251,27 +285,30 @@ defmodule UUID do
 
   @doc """
   Generate a new UUID v5. This version uses an SHA1 hash of fixed value (chosen
-  based on a namespace atom - see Appendix C of RFC 4122) and a name value. Can
-  also be given an existing UUID String instead of a namespace atom.
+  based on a namespace atom - see Appendix C of
+  [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt) and a name value. Can also be
+  given an existing UUID String instead of a namespace atom.
 
-  Accepted arguments are: :dns|:url|:oid|:x500|:nil OR uuid, String
+  Accepted arguments are: `:dns`|`:url`|`:oid`|`:x500`|`:nil` OR uuid, String
 
   ## Examples
 
-    iex> UUID.uuid5(:dns, "my.domain.com")
-    "ae119419-7776-563d-b6e8-8a177abccc7a"
+  ```elixir
+  iex> UUID.uuid5(:dns, "my.domain.com")
+  "ae119419-7776-563d-b6e8-8a177abccc7a"
 
-    iex> UUID.uuid5(:dns, "my.domain.com", :default)
-    "ae119419-7776-563d-b6e8-8a177abccc7a"
+  iex> UUID.uuid5(:dns, "my.domain.com", :default)
+  "ae119419-7776-563d-b6e8-8a177abccc7a"
 
-    iex> UUID.uuid5(:dns, "my.domain.com", :hex)
-    "ae1194197776563db6e88a177abccc7a"
+  iex> UUID.uuid5(:dns, "my.domain.com", :hex)
+  "ae1194197776563db6e88a177abccc7a"
 
-    iex> UUID.uuid5(:dns, "my.domain.com", :urn)
-    "urn:uuid:ae119419-7776-563d-b6e8-8a177abccc7a"
+  iex> UUID.uuid5(:dns, "my.domain.com", :urn)
+  "urn:uuid:ae119419-7776-563d-b6e8-8a177abccc7a"
 
-    iex> UUID.uuid5("fb49a0ec-d60c-4d20-9264-3b4cfe272106", "my.domain.com")
-    "822cab19-df58-5eb4-98b5-c96c15c76d32"
+  iex> UUID.uuid5("fb49a0ec-d60c-4d20-9264-3b4cfe272106", "my.domain.com")
+  "822cab19-df58-5eb4-98b5-c96c15c76d32"
+  ```
 
   """
   def uuid5(namespace_or_uuid, name, format \\ :default)

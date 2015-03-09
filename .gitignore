@@ -1,6 +1,7 @@
 ## build system files
 _build/
 deps/
+doc/
 erl_crash.dump
 *.ez
 
