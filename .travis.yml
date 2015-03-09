@@ -1,9 +1,11 @@
 language: erlang
 otp_release:
-- 17.4.1
+- 17.1
 before_install:
 - wget http://s3.hex.pm/builds/elixir/v1.0.3.zip
 - unzip -d elixir v1.0.3.zip
 before_script:
 - export PATH=`pwd`/elixir/bin:$PATH
+- mix local.hex --force
+- mix deps.get --only dev
 script: mix test
