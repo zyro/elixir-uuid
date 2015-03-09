@@ -3,13 +3,17 @@ Changelog
 
 ### Unreleased changes
 
-* Vastly improved binary handling: ~3.5x faster UUID generation and UUID binary to string, ~1.5x faster UUID string to binary.
-* Rename `info/1` to `info!/1` for consistency with Elixir best practices.
-* Add `binary_to_string!/2` and `string_to_binary!/1` utility functions.
-* Bump Elixir version requirement to `~> 1.0`.
-* [Internal] Additional tests, integrate repo with Travis CI.
+None.
 
 ---
+
+### v1.0.0, 09 Mar 2015, Elixir `~> 1.0`
+
+* [Enhancement] Vastly improved binary handling: ~3.5x faster UUID generation and UUID binary to string, ~1.5x faster UUID string to binary.
+* [Breaking] Rename `info/1` to `info!/1` for consistency with Elixir best practices.
+* [Enhancement] Add `binary_to_string!/2` and `string_to_binary!/1` utility functions.
+* [Breaking] Bump Elixir version requirement to `~> 1.0`.
+* [Internal] Additional tests, integrate repo with Travis CI.
 
 ### v0.1.5, 12 Aug 2014, Elixir `>= 0.15.0`
 
