@@ -131,7 +131,7 @@ iex> UUID.string_to_binary("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
             19, 20, 16, 159, 241, 163, 4>>
 ```
 
-Use `UUID.binary_to_string!/2` to convert valid UUID binary data to a String representation, with an optional format similar to the generator functions above. An `ArgumentError` is raised if the argument is valid UUID binary data.
+Use `UUID.binary_to_string!/2` to convert valid UUID binary data to a String representation, with an optional format similar to the generator functions above. An `ArgumentError` is raised if the argument is not valid UUID binary data.
 ```elixir
 iex> UUID.binary_to_string(<<135, 13, 248, 232, 49, 7, 68, 135, 131,
             22, 129, 224, 137, 184, 194, 207>>)
