@@ -5,7 +5,7 @@ defmodule UUID do
   See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
   """
 
-  @nanosec_intervals_offset 122192928000000000 # 15 Oct 1582 to 1 Jan 1970.
+  @nanosec_intervals_offset 122_192_928_000_000_000 # 15 Oct 1582 to 1 Jan 1970.
   @nanosec_intervals_factor 10 # Microseconds to nanoseconds factor.
 
   @variant10 2 # Variant, corresponds to variant 1 0 of RFC 4122.
@@ -399,7 +399,7 @@ defmodule UUID do
   # Get unix epoch as a 60-bit timestamp.
   defp uuid1_time() do
     {mega_sec, sec, micro_sec} = :erlang.now()
-    epoch = (mega_sec * 1000000000000 + sec * 1000000 + micro_sec)
+    epoch = (mega_sec * 1_000_000_000_000 + sec * 1_000_000 + micro_sec)
     timestamp = @nanosec_intervals_offset + @nanosec_intervals_factor * epoch
     <<timestamp::60>>
   end
@@ -468,7 +468,7 @@ defmodule UUID do
     raise ArgumentError, message: "Invalid argument; Not valid variant bits"
   end
 
-  # CBnary data to list of hex characters.
+  # Binary data to list of hex characters.
   defp binary_to_hex_list(binary) do
     :binary.bin_to_list(binary)
       |> list_to_hex_str
