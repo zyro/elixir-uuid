@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.0.1, 30 May 2015, Elixir `~> 1.0`
+
+* [Internal] Use `:os.timestamp/1` instead of `:erlang.now/1`.
+
 ### v1.0.0, 09 Mar 2015, Elixir `~> 1.0`
 
 * [Internal] Vastly improved binary handling: ~3.5x faster UUID generation and UUID binary to string, ~1.5x faster UUID string to binary.
