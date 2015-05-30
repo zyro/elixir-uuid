@@ -150,7 +150,7 @@ defmodule UUID do
   iex> UUID.uuid1(:default)
   "cdfdaf44-ee35-11e3-846b-14109ff1a304"
 
-  iex> UUID.uuid1(:hex)    
+  iex> UUID.uuid1(:hex)
   "cdfdaf44ee3511e3846b14109ff1a304"
 
   iex> UUID.uuid1(:urn)
@@ -176,7 +176,7 @@ defmodule UUID do
   iex> UUID.uuid1(:default)
   "cdfdaf44-ee35-11e3-846b-14109ff1a304"
 
-  iex> UUID.uuid1(:hex)    
+  iex> UUID.uuid1(:hex)
   "cdfdaf44ee3511e3846b14109ff1a304"
 
   iex> UUID.uuid1(:urn)
@@ -398,7 +398,7 @@ defmodule UUID do
 
   # Get unix epoch as a 60-bit timestamp.
   defp uuid1_time() do
-    {mega_sec, sec, micro_sec} = :erlang.now()
+    {mega_sec, sec, micro_sec} = :os.timestamp()
     epoch = (mega_sec * 1_000_000_000_000 + sec * 1_000_000 + micro_sec)
     timestamp = @nanosec_intervals_offset + @nanosec_intervals_factor * epoch
     <<timestamp::60>>
