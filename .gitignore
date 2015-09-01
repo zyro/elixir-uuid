@@ -5,6 +5,9 @@ doc/
 erl_crash.dump
 *.ez
 
+## Benchmark results files
+bench/snapshots/
+
 ## generic files
 *~
 *.DS_Store
