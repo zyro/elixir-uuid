@@ -35,8 +35,7 @@ defmodule UUID do
   ```elixir
   iex> UUID.info!("870df8e8-3107-4487-8316-81e089b8c2cf")
   [uuid: "870df8e8-3107-4487-8316-81e089b8c2cf",
-   binary: <<135, 13, 248, 232, 49, 7, 68, 135, 131,
-              22, 129, 224, 137, 184, 194, 207>>,
+   binary: <<135, 13, 248, 232, 49, 7, 68, 135, 131, 22, 129, 224, 137, 184, 194, 207>>,
    type: :default,
    version: 4,
    variant: :rfc4122]
@@ -51,11 +50,11 @@ defmodule UUID do
 
   iex> UUID.info!("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
   [uuid: "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304",
-   binary: <<239, 27, 26, 40, 238, 52, 17, 227, 136,
-              19, 20, 16, 159, 241, 163, 4>>,
+   binary: <<239, 27, 26, 40, 238, 52, 17, 227, 136, 19, 20, 16, 159, 241, 163, 4>>,
    type: :urn,
    version: 1,
    variant: :rfc4122]
+
   ```
 
   """
@@ -81,17 +80,18 @@ defmodule UUID do
   ## Examples
 
   ```elixir
-  iex> UUID.binary_to_string!(<<135, 13, 248, 232, 49, 7, 68, 135, 131,
-              22, 129, 224, 137, 184, 194, 207>>)
+  iex> UUID.binary_to_string!(<<135, 13, 248, 232, 49, 7, 68, 135,
+  ...>        131, 22, 129, 224, 137, 184, 194, 207>>)
   "870df8e8-3107-4487-8316-81e089b8c2cf"
 
   iex> UUID.binary_to_string!(<<142, 161, 81, 61, 248, 161, 77, 234, 155,
-              234, 107, 143, 75, 91, 110, 115>>, :hex)
+  ...>        234, 107, 143, 75, 91, 110, 115>>, :hex)
   "8ea1513df8a14dea9bea6b8f4b5b6e73"
 
   iex> UUID.binary_to_string!(<<239, 27, 26, 40, 238, 52, 17, 227, 136,
-              19, 20, 16, 159, 241, 163, 4>>, :urn)
+  ...>        19, 20, 16, 159, 241, 163, 4>>, :urn)
   "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"
+
   ```
 
   """
@@ -116,16 +116,14 @@ defmodule UUID do
 
   ```elixir
   iex> UUID.string_to_binary!("870df8e8-3107-4487-8316-81e089b8c2cf")
-  <<135, 13, 248, 232, 49, 7, 68, 135, 131,
-              22, 129, 224, 137, 184, 194, 207>>
+  <<135, 13, 248, 232, 49, 7, 68, 135, 131, 22, 129, 224, 137, 184, 194, 207>>
 
   iex> UUID.string_to_binary!("8ea1513df8a14dea9bea6b8f4b5b6e73")
-  <<142, 161, 81, 61, 248, 161, 77, 234, 155,
-              234, 107, 143, 75, 91, 110, 115>>
+  <<142, 161, 81, 61, 248, 161, 77, 234, 155, 234, 107, 143, 75, 91, 110, 115>>
 
   iex> UUID.string_to_binary!("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
-  <<239, 27, 26, 40, 238, 52, 17, 227, 136,
-              19, 20, 16, 159, 241, 163, 4>>
+  <<239, 27, 26, 40, 238, 52, 17, 227, 136, 19, 20, 16, 159, 241, 163, 4>>
+
   ```
 
   """
@@ -155,6 +153,7 @@ defmodule UUID do
 
   iex> UUID.uuid1(:urn)
   "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
+
   ```
 
   """
@@ -181,6 +180,7 @@ defmodule UUID do
 
   iex> UUID.uuid1(:urn)
   "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
+
   ```
 
   """
@@ -222,6 +222,7 @@ defmodule UUID do
 
   iex> UUID.uuid3("cdfdaf44-ee35-11e3-846b-14109ff1a304", "my.domain.com")
   "8808f33a-3e11-3708-919e-15fba88908db"
+
   ```
 
   """
@@ -274,6 +275,7 @@ defmodule UUID do
 
   iex> UUID.uuid4(:urn)
   "urn:uuid:fb49a0ec-d60c-4d20-9264-3b4cfe272106"
+
   ```
 
   """
@@ -308,6 +310,7 @@ defmodule UUID do
 
   iex> UUID.uuid5("fb49a0ec-d60c-4d20-9264-3b4cfe272106", "my.domain.com")
   "822cab19-df58-5eb4-98b5-c96c15c76d32"
+
   ```
 
   """
