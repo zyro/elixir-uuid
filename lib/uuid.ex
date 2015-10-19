@@ -280,9 +280,17 @@ defmodule UUID do
 
   """
   def uuid4(format \\ :default) do
-    <<u0::48, _::4, u1::12, _::2, u2::62>> = :crypto.rand_bytes(16)
+    <<u0::48, _::4, u1::12, _::2, u2::62>> = rand_bytes(16)
     <<u0::48, @uuid_v4::4, u1::12, @variant10::2, u2::62>>
       |> uuid_to_string format
+  end
+
+  defp rand_bytes(how_many) do
+    try do
+      :crypto.strong_rand_bytes(how_many)
+    catch :low_entropy ->
+      :crypto.rand_bytes(how_many)
+    end
   end
 
   @doc """
