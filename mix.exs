@@ -1,13 +1,17 @@
 defmodule UUID.Mixfile do
   use Mix.Project
 
+  @version "1.1.0"
+
   def project do
     [app: :uuid,
      name: "UUID",
-     version: "1.1.0",
-     source_url: "https://github.com/zyro/elixir-uuid",
-     homepage_url: "http://hexdocs.pm/uuid",
+     version: @version,
      elixir: "~> 1.0",
+     docs: [extras: ["README.md"],
+            main: "extra-readme",
+            source_ref: "v#{@version}"],
+     source_url: "https://github.com/zyro/elixir-uuid",
      description: description,
      package: package,
      deps: deps]
@@ -37,10 +41,7 @@ defmodule UUID.Mixfile do
     [files: ["lib", "mix.exs", "README.md", "LICENSE"],
      maintainers: ["Andrei Mihu"],
      licenses: ["Apache 2.0"],
-     links: %{
-       github: "https://github.com/zyro/elixir-uuid",
-       docs: "http://hexdocs.pm/uuid"
-     }]
+     links: %{"GitHub" => "https://github.com/zyro/elixir-uuid"}]
   end
 
 end
