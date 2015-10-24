@@ -4,7 +4,7 @@ defmodule UUID.Mixfile do
   def project do
     [app: :uuid,
      name: "UUID",
-     version: "1.0.1",
+     version: "1.1.0",
      source_url: "https://github.com/zyro/elixir-uuid",
      homepage_url: "http://hexdocs.pm/uuid",
      elixir: "~> 1.0",

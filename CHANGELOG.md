@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.1.0, 24 Oct 2015, Elixir `~> 1.0`
+
+* [Enhancement] `uuid4` now accepts an additional first argument `:strong` (default) or `:weak`, indicating whether to use strong PRNG or not.
+
 ### v1.0.1, 30 May 2015, Elixir `~> 1.0`
 
 * [Internal] Use `:os.timestamp/1` instead of `:erlang.now/1`.
