@@ -7,6 +7,11 @@ None.
 
 ---
 
+### v1.1.1, 14 Nov 2015, Elixir `~> 1.0`
+
+* [Internal] Ensure UUID v1 generator `node_id` lookup correctly skips network adapters with unsuitable `:hwaddr` values.
+* [Internal] Simplify UUID v1 `clock_seq` random generation.
+
 ### v1.1.0, 24 Oct 2015, Elixir `~> 1.0`
 
 * [Enhancement] `uuid4` now accepts an additional first argument `:strong` (default) or `:weak`, indicating whether to use strong PRNG or not.

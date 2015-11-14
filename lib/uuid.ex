@@ -439,11 +439,7 @@ defmodule UUID do
 
   # Generate random clock sequence.
   defp uuid1_clockseq() do
-    pid_sum = :erlang.phash2(:erlang.self())
-    <<n0::32, n1::32, n2::32>> = :crypto.rand_bytes(12)
-    now_xor_pid = {n0 ^^^ pid_sum, n1 ^^^ pid_sum, n2 ^^^ pid_sum}
-    :random.seed(now_xor_pid)
-    rnd = :random.uniform(2 <<< 14 - 1)
+    <<rnd::14, _::2>> = :crypto.rand_bytes(2)
     <<rnd::14>>
   end
 
@@ -455,10 +451,12 @@ defmodule UUID do
 
   defp uuid1_node([{_if_name, if_config} | rest]) do
     case :lists.keyfind(:hwaddr, 1, if_config) do
-      {:hwaddr, hw_addr} ->
-        :erlang.list_to_binary(hw_addr)
       :false ->
         uuid1_node(rest)
+      {:hwaddr, [0, 0, 0, 0, 0, 0]} ->
+        uuid1_node(rest)
+      {:hwaddr, hw_addr} ->
+        :erlang.list_to_binary(hw_addr)
     end
   end
   defp uuid1_node(_) do
