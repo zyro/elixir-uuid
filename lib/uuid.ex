@@ -190,7 +190,7 @@ defmodule UUID do
     <<clock_seq_hi::6, clock_seq_low::8>> = <<clock_seq::14>>
     <<time_low::32, time_mid::16, @uuid_v1::4, time_hi::12, @variant10::2,
       clock_seq_hi::6, clock_seq_low::8, node::48>>
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid1(_, _, _) do
     raise ArgumentError, message:
@@ -229,28 +229,28 @@ defmodule UUID do
   def uuid3(namespace_or_uuid, name, format \\ :default)
   def uuid3(:dns, <<name::binary>>, format) do
     namebased_uuid(:md5, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid3(:url, <<name::binary>>, format) do
     namebased_uuid(:md5, <<"6ba7b8119dad11d180b400c04fd430c8", name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid3(:oid, <<name::binary>>, format) do
     namebased_uuid(:md5, <<"6ba7b8129dad11d180b400c04fd430c8", name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid3(:x500, <<name::binary>>, format) do
     namebased_uuid(:md5, <<"6ba7b8149dad11d180b400c04fd430c8", name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid3(:nil, <<name::binary>>, format) do
     namebased_uuid(:md5, <<0::128, name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid3(<<uuid::binary>>, <<name::binary>>, format) do
     {_type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     namebased_uuid(:md5, <<uuid::128, name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid3(_, _, _) do
     raise ArgumentError, message:
@@ -304,12 +304,12 @@ defmodule UUID do
   def uuid4(:strong, format) do
     <<u0::48, _::4, u1::12, _::2, u2::62>> = :crypto.strong_rand_bytes(16)
     <<u0::48, @uuid_v4::4, u1::12, @variant10::2, u2::62>>
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid4(:weak, format) do
     <<u0::48, _::4, u1::12, _::2, u2::62>> = :crypto.rand_bytes(16)
     <<u0::48, @uuid_v4::4, u1::12, @variant10::2, u2::62>>
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid4(_, _) do
     raise ArgumentError, message: "Invalid argument; Expected :strong|:weak"
@@ -347,28 +347,28 @@ defmodule UUID do
   def uuid5(namespace_or_uuid, name, format \\ :default)
   def uuid5(:dns, <<name::binary>>, format) do
     namebased_uuid(:sha1, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid5(:url, <<name::binary>>, format) do
     namebased_uuid(:sha1, <<"6ba7b8119dad11d180b400c04fd430c8", name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid5(:oid, <<name::binary>>, format) do
     namebased_uuid(:sha1, <<"6ba7b8129dad11d180b400c04fd430c8", name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid5(:x500, <<name::binary>>, format) do
     namebased_uuid(:sha1, <<"6ba7b8149dad11d180b400c04fd430c8", name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid5(:nil, <<name::binary>>, format) do
     namebased_uuid(:sha1, <<0::128, name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid5(<<uuid::binary>>, <<name::binary>>, format) do
     {_type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     namebased_uuid(:sha1, <<uuid::128, name::binary>>)
-      |> uuid_to_string format
+      |> uuid_to_string(format)
   end
   def uuid5(_, _, _) do
     raise ArgumentError, message:
