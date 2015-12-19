@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.1.2, 19 Dec 2015, Elixir `~> 1.0`
+
+* [Internal] Fix piping without parentheses warning for Elixir 1.2.
+
 ### v1.1.1, 14 Nov 2015, Elixir `~> 1.0`
 
 * [Internal] Ensure UUID v1 generator `node_id` lookup correctly skips network adapters with unsuitable `:hwaddr` values.

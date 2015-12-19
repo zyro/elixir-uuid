@@ -1,7 +1,7 @@
 defmodule UUID.Mixfile do
   use Mix.Project
 
-  @version "1.1.1"
+  @version "1.1.2"
 
   def project do
     [app: :uuid,
@@ -24,9 +24,9 @@ defmodule UUID.Mixfile do
 
   # List of dependencies.
   defp deps do
-    [{:ex_doc, "~> 0.8", only: :dev},
+    [{:ex_doc, "~> 0.11", only: :dev},
      {:earmark, "~> 0.1", only: :dev},
-     {:benchfella, "~> 0.2", only: :dev}]
+     {:benchfella, "~> 0.3", only: :dev}]
   end
 
   # Description.
