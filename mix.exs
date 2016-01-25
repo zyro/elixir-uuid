@@ -1,15 +1,15 @@
 defmodule UUID.Mixfile do
   use Mix.Project
 
-  @version "1.1.2"
+  @version "1.1.3"
 
   def project do
     [app: :uuid,
      name: "UUID",
      version: @version,
      elixir: "~> 1.0",
-     docs: [extras: ["README.md"],
-            main: "extra-readme",
+     docs: [extras: ["README.md", "CHANGELOG.md"],
+            main: "readme",
             source_ref: "v#{@version}"],
      source_url: "https://github.com/zyro/elixir-uuid",
      description: description,
@@ -25,7 +25,7 @@ defmodule UUID.Mixfile do
   # List of dependencies.
   defp deps do
     [{:ex_doc, "~> 0.11", only: :dev},
-     {:earmark, "~> 0.1", only: :dev},
+     {:earmark, "~> 0.2", only: :dev},
      {:benchfella, "~> 0.3", only: :dev}]
   end
 

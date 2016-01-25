@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.1.3, 25 Jan 2016, Elixir `~> 1.0`
+
+* [Internal] Fix documentation, and update documentation generator dependencies.
+
 ### v1.1.2, 19 Dec 2015, Elixir `~> 1.0`
 
 * [Internal] Fix piping without parentheses warning for Elixir 1.2.
