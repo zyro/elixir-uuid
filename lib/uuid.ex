@@ -22,7 +22,7 @@ defmodule UUID do
     :reserved_microsoft |
     :reserved_ncs |
     :rfc4122
-  @type namespace_or_uuid :: :dns | :nil | :oid | :url | :x500 | binary
+  @type namespace :: :dns | :nil | :oid | :url | :x500
 
 
   @doc """
@@ -241,7 +241,7 @@ defmodule UUID do
 
   """
 
-  @spec uuid3(namespace_or_uuid, binary, format) :: String.t
+  @spec uuid3(namespace | binary, binary, format) :: String.t
   def uuid3(namespace_or_uuid, name, format \\ :default)
   def uuid3(:dns, <<name::binary>>, format) do
     namebased_uuid(:md5, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
@@ -362,7 +362,7 @@ defmodule UUID do
   ```
 
   """
-  @spec uuid5(namespace_or_uuid, binary, format) :: String.t
+  @spec uuid5(namespace | binary, binary, format) :: String.t
   def uuid5(namespace_or_uuid, name, format \\ :default)
   def uuid5(:dns, <<name::binary>>, format) do
     namebased_uuid(:sha1, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
