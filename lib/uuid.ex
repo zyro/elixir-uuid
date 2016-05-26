@@ -16,6 +16,9 @@ defmodule UUID do
 
   @urn "urn:uuid:" # UUID URN prefix.
 
+  @type format :: :default | :hex | :urn
+  @type namespace :: :dns | :url | :oid | :x500 | :nil
+  @type uuid :: <<_ :: 128>>
   @doc """
   Inspect a UUID and return information about its 128-bit binary content, type,
   version and variant.
@@ -58,6 +61,8 @@ defmodule UUID do
   ```
 
   """
+  @spec info!(String.t) :: [{:binary, uuid} | {:type, format} | {:uuid, String.t } | {:variant, :reserved_future | :reserved_microsoft | :reserved_ncs | :rfc4122} | {:version, byte()}]
+
   def info!(<<uuid::binary>> = uuid_string) do
     {type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = <<uuid::128>>
@@ -95,6 +100,9 @@ defmodule UUID do
   ```
 
   """
+
+  @spec binary_to_string!(binary(), format) :: String.t
+
   def binary_to_string!(uuid, format \\ :default)
   def binary_to_string!(<<uuid::binary>>, format) do
     uuid_to_string(<<uuid::binary>>, format)
@@ -127,6 +135,9 @@ defmodule UUID do
   ```
 
   """
+
+  @spec string_to_binary!(String.t) :: uuid
+
   def string_to_binary!(<<uuid::binary>>) do
     {_type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     <<uuid::128>>
@@ -157,6 +168,9 @@ defmodule UUID do
   ```
 
   """
+
+  @spec uuid1(format) :: String.t
+
   def uuid1(format \\ :default) do
     uuid1(uuid1_clockseq(), uuid1_node(), format)
   end
@@ -184,6 +198,7 @@ defmodule UUID do
   ```
 
   """
+  @spec uuid1(<< _ :: 14 >>, <<_ :: 48 >>, format) ::  String.t
   def uuid1(clock_seq, node, format \\ :default)
   def uuid1(<<clock_seq::14>>, <<node::48>>, format) do
     <<time_hi::12, time_mid::16, time_low::32>> = uuid1_time()
@@ -226,6 +241,7 @@ defmodule UUID do
   ```
 
   """
+  @spec uuid3(namespace | String.t, String.t, format ) :: String.t
   def uuid3(namespace_or_uuid, name, format \\ :default)
   def uuid3(:dns, <<name::binary>>, format) do
     namebased_uuid(:md5, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
@@ -295,12 +311,15 @@ defmodule UUID do
   ```
 
   """
+  @spec uuid4() :: String.t
   def uuid4(), do: uuid4(:strong, :default)
 
+  @spec uuid4(:strong | :weak | format) :: String.t
   def uuid4(:strong), do: uuid4(:strong, :default)
   def uuid4(:weak),   do: uuid4(:weak, :default)
   def uuid4(format),  do: uuid4(:strong, format)
 
+  @spec uuid4(:strong  | :weak, format) :: String.t
   def uuid4(:strong, format) do
     <<u0::48, _::4, u1::12, _::2, u2::62>> = :crypto.strong_rand_bytes(16)
     <<u0::48, @uuid_v4::4, u1::12, @variant10::2, u2::62>>
@@ -344,6 +363,9 @@ defmodule UUID do
   ```
 
   """
+
+  @spec uuid5(namespace | String.t, String.t, format) :: String.t
+
   def uuid5(namespace_or_uuid, name, format \\ :default)
   def uuid5(:dns, <<name::binary>>, format) do
     namebased_uuid(:sha1, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)

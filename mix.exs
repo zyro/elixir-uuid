@@ -14,7 +14,17 @@ defmodule UUID.Mixfile do
      source_url: "https://github.com/zyro/elixir-uuid",
      description: description,
      package: package,
-     deps: deps]
+     deps: deps,
+     dialyzer: [
+       flags: ["-Wunmatched_returns",
+        "-Werror_handling",
+        "-Wrace_conditions",
+        "-Wunderspecs",
+        "-Wunknown",
+        # "-Woverspecs",
+        # "-Wspecdiffs"
+      ]],
+  ]
   end
 
   # Application configuration.
@@ -26,7 +36,8 @@ defmodule UUID.Mixfile do
   defp deps do
     [{:ex_doc, "~> 0.11", only: :dev},
      {:earmark, "~> 0.2", only: :dev},
-     {:benchfella, "~> 0.3", only: :dev}]
+     {:benchfella, "~> 0.3", only: :dev},
+     {:dialyxir, "~> 0.3", only: :dev}]
   end
 
   # Description.
