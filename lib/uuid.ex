@@ -207,10 +207,6 @@ defmodule UUID do
       clock_seq_hi::6, clock_seq_low::8, node::48>>
       |> uuid_to_string(format)
   end
-  def uuid1(_, _, _) do
-    raise ArgumentError, message:
-    "Invalid argument; Expected: <<clock_seq::14>>, <<node::48>>"
-  end
 
   @doc """
   Generate a new UUID v3. This version uses an MD5 hash of fixed value (chosen
@@ -267,10 +263,6 @@ defmodule UUID do
     {_type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     namebased_uuid(:md5, <<uuid::128, name::binary>>)
       |> uuid_to_string(format)
-  end
-  def uuid3(_, _, _) do
-    raise ArgumentError, message:
-    "Invalid argument; Expected: :dns|:url|:oid|:x500|:nil OR String, String"
   end
 
   @doc """
@@ -330,9 +322,6 @@ defmodule UUID do
     <<u0::48, @uuid_v4::4, u1::12, @variant10::2, u2::62>>
       |> uuid_to_string(format)
   end
-  def uuid4(_, _) do
-    raise ArgumentError, message: "Invalid argument; Expected :strong|:weak"
-  end
 
   @doc """
   Generate a new UUID v5. This version uses an SHA1 hash of fixed value (chosen
@@ -391,10 +380,6 @@ defmodule UUID do
     {_type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     namebased_uuid(:sha1, <<uuid::128, name::binary>>)
       |> uuid_to_string(format)
-  end
-  def uuid5(_, _, _) do
-    raise ArgumentError, message:
-    "Invalid argument; Expected: :dns|:url|:oid|:x500|:nil OR String, String"
   end
 
   #
