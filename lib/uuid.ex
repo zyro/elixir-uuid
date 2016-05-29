@@ -453,10 +453,12 @@ defmodule UUID do
     case :lists.keyfind(:hwaddr, 1, if_config) do
       :false ->
         uuid1_node(rest)
-      {:hwaddr, [0, 0, 0, 0, 0, 0]} ->
-        uuid1_node(rest)
       {:hwaddr, hw_addr} ->
-        :erlang.list_to_binary(hw_addr)
+        if Enum.all?(hw_addr, fn(n) -> n == 0 end) do
+          uuid1_node(rest)
+        else
+          :erlang.list_to_binary(hw_addr)
+        end
     end
   end
   defp uuid1_node(_) do
