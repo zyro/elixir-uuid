@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.1.4, 29 May 2016, Elixir `~> 1.0`
+
+* [Internal] Correctly skip any all-0 hardware addresses when generating UUID v1.
+
 ### v1.1.3, 25 Jan 2016, Elixir `~> 1.0`
 
 * [Internal] Fix documentation, and update documentation generator dependencies.
