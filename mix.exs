@@ -12,9 +12,9 @@ defmodule UUID.Mixfile do
             main: "readme",
             source_ref: "v#{@version}"],
      source_url: "https://github.com/zyro/elixir-uuid",
-     description: description,
-     package: package,
-     deps: deps]
+     description: description(),
+     package: package(),
+     deps: deps()]
   end
 
   # Application configuration.
