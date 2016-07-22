@@ -307,7 +307,7 @@ defmodule UUID do
       |> uuid_to_string(format)
   end
   def uuid4(:weak, format) do
-    <<u0::48, _::4, u1::12, _::2, u2::62>> = :crypto.rand_bytes(16)
+    <<u0::48, _::4, u1::12, _::2, u2::62>> = :crypto.strong_rand_bytes(16)
     <<u0::48, @uuid_v4::4, u1::12, @variant10::2, u2::62>>
       |> uuid_to_string(format)
   end
@@ -439,7 +439,7 @@ defmodule UUID do
 
   # Generate random clock sequence.
   defp uuid1_clockseq() do
-    <<rnd::14, _::2>> = :crypto.rand_bytes(2)
+    <<rnd::14, _::2>> = :crypto.strong_rand_bytes(2)
     <<rnd::14>>
   end
 
@@ -462,7 +462,7 @@ defmodule UUID do
     end
   end
   defp uuid1_node(_) do
-    <<rnd_hi::7, _::1, rnd_low::40>> = :crypto.rand_bytes(6)
+    <<rnd_hi::7, _::1, rnd_low::40>> = :crypto.strong_rand_bytes(6)
     <<rnd_hi::7, 1::1, rnd_low::40>>
   end
 
