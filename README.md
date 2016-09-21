@@ -9,7 +9,7 @@ UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 412
 
 ### Installation
 
-The latest version is `1.1.4` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
+The latest version is `1.1.5` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
 
 Releases are published through [hex.pm](https://hex.pm/packages/uuid). Add as a dependency in your `mix.exs` file:
 ```elixir
@@ -41,14 +41,11 @@ iex> UUID.uuid3("5976423a-ee35-11e3-8569-14109ff1a304", "my.domain.com")
 
 ### UUID v4
 
-Generated based on pseudo-random bytes. Accepts optional `:strong` (default) or `:weak` parameter.
+Generated based on pseudo-random bytes.
 
 ```elixir
 iex> UUID.uuid4()
 "fcfe5f21-8a08-4c9a-9f97-29d2fd6a27b9"
-
-iex> UUID.uuid4(:weak)
-"cd63a9c4-0b4e-477a-8229-3f3aa971a37b"
 ```
 
 ### UUID v5
