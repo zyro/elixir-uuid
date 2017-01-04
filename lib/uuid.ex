@@ -209,16 +209,16 @@ defmodule UUID do
 
   ```elixir
   iex> UUID.uuid3(:dns, "my.domain.com")
-  "eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
+  "03bf0706-b7e9-33b8-aee5-c6142a816478"
 
   iex> UUID.uuid3(:dns, "my.domain.com", :default)
-  "eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
+  "03bf0706-b7e9-33b8-aee5-c6142a816478"
 
   iex> UUID.uuid3(:dns, "my.domain.com", :hex)
-  "eecf4c2bf6e53ae3bef71ea09f91d3e7"
+  "03bf0706b7e933b8aee5c6142a816478"
 
   iex> UUID.uuid3(:dns, "my.domain.com", :urn)
-  "urn:uuid:eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
+  "urn:uuid:03bf0706-b7e9-33b8-aee5-c6142a816478"
 
   iex> UUID.uuid3("cdfdaf44-ee35-11e3-846b-14109ff1a304", "my.domain.com")
   "8808f33a-3e11-3708-919e-15fba88908db"
@@ -228,19 +228,19 @@ defmodule UUID do
   """
   def uuid3(namespace_or_uuid, name, format \\ :default)
   def uuid3(:dns, <<name::binary>>, format) do
-    namebased_uuid(:md5, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
+    namebased_uuid(:md5, <<0x6ba7b8109dad11d180b400c04fd430c8::128, name::binary>>)
       |> uuid_to_string(format)
   end
   def uuid3(:url, <<name::binary>>, format) do
-    namebased_uuid(:md5, <<"6ba7b8119dad11d180b400c04fd430c8", name::binary>>)
+    namebased_uuid(:md5, <<0x6ba7b8119dad11d180b400c04fd430c8::128, name::binary>>)
       |> uuid_to_string(format)
   end
   def uuid3(:oid, <<name::binary>>, format) do
-    namebased_uuid(:md5, <<"6ba7b8129dad11d180b400c04fd430c8", name::binary>>)
+    namebased_uuid(:md5, <<0x6ba7b8129dad11d180b400c04fd430c8::128, name::binary>>)
       |> uuid_to_string(format)
   end
   def uuid3(:x500, <<name::binary>>, format) do
-    namebased_uuid(:md5, <<"6ba7b8149dad11d180b400c04fd430c8", name::binary>>)
+    namebased_uuid(:md5, <<0x6ba7b8149dad11d180b400c04fd430c8::128, name::binary>>)
       |> uuid_to_string(format)
   end
   def uuid3(:nil, <<name::binary>>, format) do
@@ -300,16 +300,16 @@ defmodule UUID do
 
   ```elixir
   iex> UUID.uuid5(:dns, "my.domain.com")
-  "ae119419-7776-563d-b6e8-8a177abccc7a"
+  "016c25fd-70e0-56fe-9d1a-56e80fa20b82"
 
   iex> UUID.uuid5(:dns, "my.domain.com", :default)
-  "ae119419-7776-563d-b6e8-8a177abccc7a"
+  "016c25fd-70e0-56fe-9d1a-56e80fa20b82"
 
   iex> UUID.uuid5(:dns, "my.domain.com", :hex)
-  "ae1194197776563db6e88a177abccc7a"
+  "016c25fd70e056fe9d1a56e80fa20b82"
 
   iex> UUID.uuid5(:dns, "my.domain.com", :urn)
-  "urn:uuid:ae119419-7776-563d-b6e8-8a177abccc7a"
+  "urn:uuid:016c25fd-70e0-56fe-9d1a-56e80fa20b82"
 
   iex> UUID.uuid5("fb49a0ec-d60c-4d20-9264-3b4cfe272106", "my.domain.com")
   "822cab19-df58-5eb4-98b5-c96c15c76d32"
@@ -319,19 +319,19 @@ defmodule UUID do
   """
   def uuid5(namespace_or_uuid, name, format \\ :default)
   def uuid5(:dns, <<name::binary>>, format) do
-    namebased_uuid(:sha1, <<"6ba7b8109dad11d180b400c04fd430c8", name::binary>>)
+    namebased_uuid(:sha1, <<0x6ba7b8109dad11d180b400c04fd430c8::128, name::binary>>)
       |> uuid_to_string(format)
   end
   def uuid5(:url, <<name::binary>>, format) do
-    namebased_uuid(:sha1, <<"6ba7b8119dad11d180b400c04fd430c8", name::binary>>)
+    namebased_uuid(:sha1, <<0x6ba7b8119dad11d180b400c04fd430c8::128, name::binary>>)
       |> uuid_to_string(format)
   end
   def uuid5(:oid, <<name::binary>>, format) do
-    namebased_uuid(:sha1, <<"6ba7b8129dad11d180b400c04fd430c8", name::binary>>)
+    namebased_uuid(:sha1, <<0x6ba7b8129dad11d180b400c04fd430c8::128, name::binary>>)
       |> uuid_to_string(format)
   end
   def uuid5(:x500, <<name::binary>>, format) do
-    namebased_uuid(:sha1, <<"6ba7b8149dad11d180b400c04fd430c8", name::binary>>)
+    namebased_uuid(:sha1, <<0x6ba7b8149dad11d180b400c04fd430c8::128, name::binary>>)
       |> uuid_to_string(format)
   end
   def uuid5(:nil, <<name::binary>>, format) do
