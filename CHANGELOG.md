@@ -7,6 +7,10 @@ Changelog
 
 ---
 
+### v1.1.6, 04 Jan 2016, Elixir `~> 1.0`
+
+* [Fix] Update UUID v3 and v5 namespace value formats.
+
 ### v1.1.5, 20 Sep 2016, Elixir `~> 1.0`
 
 * [Internal] Use `:crypto.strong_rand_bytes/1` instead of `:crypto.rand_bytes/1`. The `:weak` option in `UUID.uuid4/1` no longer has any effect.

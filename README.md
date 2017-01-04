@@ -9,7 +9,7 @@ UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 412
 
 ### Installation
 
-The latest version is `1.1.5` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
+The latest version is `1.1.6` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
 
 Releases are published through [hex.pm](https://hex.pm/packages/uuid). Add as a dependency in your `mix.exs` file:
 ```elixir
