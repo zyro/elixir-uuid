@@ -33,7 +33,7 @@ Generated using the MD5 hash of a name and either a namespace atom or an existin
 
 ```elixir
 iex> UUID.uuid3(:dns, "my.domain.com")
-"eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
+"03bf0706-b7e9-33b8-aee5-c6142a816478"
 
 iex> UUID.uuid3("5976423a-ee35-11e3-8569-14109ff1a304", "my.domain.com")
 "0609d667-944c-3c2d-9d09-18af5c58c8fb"
@@ -54,7 +54,7 @@ Generated using the SHA1 hash of a name and either a namespace atom or an existi
 
 ```elixir
 iex> UUID.uuid5(:dns, "my.domain.com")
-"ae119419-7776-563d-b6e8-8a177abccc7a"
+"016c25fd-70e0-56fe-9d1a-56e80fa20b82"
 
 iex> UUID.uuid5("fcfe5f21-8a08-4c9a-9f97-29d2fd6a27b9", "my.domain.com")
 "b8e85535-761a-586f-9c04-0fb0df2cbe84"
@@ -75,10 +75,10 @@ iex> UUID.uuid4(:default)
 "3c69679f-774b-4fb1-80c1-7b29c6e7d0a0"
 
 iex> UUID.uuid3(:dns, "my.domain.com")
-"eecf4c2b-f6e5-3ae3-bef7-1ea09f91d3e7"
+"03bf0706-b7e9-33b8-aee5-c6142a816478"
 
 iex> UUID.uuid5(:dns, "my.domain.com", :default)
-"ae119419-7776-563d-b6e8-8a177abccc7a"
+"016c25fd-70e0-56fe-9d1a-56e80fa20b82"
 ```
 
 `:hex` is a valid hex string, corresponding to the standard UUID without the `-` (dash) characters:
