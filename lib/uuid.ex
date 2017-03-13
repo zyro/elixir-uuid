@@ -17,6 +17,60 @@ defmodule UUID do
   @urn "urn:uuid:" # UUID URN prefix.
 
   @doc """
+  Inspect a UUID and return tuple with `{:ok, result}`, where result is
+  information about its 128-bit binary content, type,
+  version and variant.
+
+  Timestamp portion is not checked to see if it's in the future, and therefore
+  not yet assignable. See "Validation mechanism" in section 3 of
+  [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
+
+  Will return `{:error, message}` if the given string is not a UUID representation
+  in a format like:
+  * `"870df8e8-3107-4487-8316-81e089b8c2cf"`
+  * `"8ea1513df8a14dea9bea6b8f4b5b6e73"`
+  * `"urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"`
+
+  ## Examples
+
+  ```elixir
+  iex> UUID.info("870df8e8-3107-4487-8316-81e089b8c2cf")
+  {:ok, [uuid: "870df8e8-3107-4487-8316-81e089b8c2cf",
+   binary: <<135, 13, 248, 232, 49, 7, 68, 135, 131, 22, 129, 224, 137, 184, 194, 207>>,
+   type: :default,
+   version: 4,
+   variant: :rfc4122]}
+
+  iex> UUID.info("8ea1513df8a14dea9bea6b8f4b5b6e73")
+  {:ok, [uuid: "8ea1513df8a14dea9bea6b8f4b5b6e73",
+   binary: <<142, 161, 81, 61, 248, 161, 77, 234, 155,
+              234, 107, 143, 75, 91, 110, 115>>,
+   type: :hex,
+   version: 4,
+   variant: :rfc4122]}
+
+  iex> UUID.info("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
+  {:ok, [uuid: "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304",
+   binary: <<239, 27, 26, 40, 238, 52, 17, 227, 136, 19, 20, 16, 159, 241, 163, 4>>,
+   type: :urn,
+   version: 1,
+   variant: :rfc4122]}
+
+  iex> UUID.info("12345")
+  {:error, "Invalid argument; Not a valid UUID: 12345"}
+
+  ```
+
+  """
+  def info(uuid) do
+    try do
+      {:ok, UUID.info!(uuid)}
+    rescue
+      e in ArgumentError -> {:error, e.message}
+    end
+  end
+
+  @doc """
   Inspect a UUID and return information about its 128-bit binary content, type,
   version and variant.
 
