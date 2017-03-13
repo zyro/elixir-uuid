@@ -30,7 +30,7 @@ defmodule UUIDTest do
   end
 
   # Expand the lines in info_tests.txt into individual tests for the
-  # UUID.info!/1 function, assuming the lines are:
+  # UUID.info!/1 and UUID.info/1 functions, assuming the lines are:
   #   test name || expected output || input value
   for line <- File.stream!(Path.join([__DIR__, "info_tests.txt"]), [], :line) do
     [name, expected, input] =
@@ -40,14 +40,6 @@ defmodule UUIDTest do
       result = UUID.info!(unquote(input))
       assert ^expected = result
     end
-  end
-
-  # Expand the lines in info_tests.txt into individual tests for the
-  # UUID.info/1 function, assuming the lines are:
-  #   test name || expected output || input value
-  for line <- File.stream!(Path.join([__DIR__, "info_tests.txt"]), [], :line) do
-    [name, expected, input] =
-      line |> String.split("||") |> Enum.map(&String.strip(&1))
     test "UUID.info/1 #{name}" do
       {expected, []} = Code.eval_string(unquote(expected))
       {:ok, result} = UUID.info(unquote(input))
