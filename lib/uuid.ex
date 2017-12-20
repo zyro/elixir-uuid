@@ -481,10 +481,13 @@ defmodule UUID do
       :false ->
         uuid1_node(rest)
       {:hwaddr, hw_addr} ->
-        if length(hw_addr) != 6 or Enum.all?(hw_addr, fn(n) -> n == 0 end) do
-          uuid1_node(rest)
-        else
-          :erlang.list_to_binary(hw_addr)
+        cond do
+          Enum.all?(hw_addr, fn(n) -> n == 0 end) ->
+            uuid1_node(rest)
+          length(hw_addr) == 6 ->
+            :erlang.list_to_binary(hw_addr)
+          true ->
+            uuid1_node(rest)
         end
     end
   end
