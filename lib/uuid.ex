@@ -146,6 +146,9 @@ defmodule UUID do
   ...>        19, 20, 16, 159, 241, 163, 4>>, :urn)
   "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"
 
+  iex> UUID.binary_to_string!(<<142, 161, 81, 61, 248, 161, 77, 234, 155,
+  ...>        234, 107, 143, 75, 91, 110, 115>>, :slug)
+  "jqFRPfihTeqb6muPS1tucw"
   ```
 
   """
@@ -208,6 +211,8 @@ defmodule UUID do
   iex> UUID.uuid1(:urn)
   "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
 
+  iex> UUID.uuid1(:slug)
+  "zf2vRO41EeOEaxQQn_GjBA"
   ```
 
   """
@@ -232,9 +237,8 @@ defmodule UUID do
   iex> UUID.uuid1(:hex)
   "cdfdaf44ee3511e3846b14109ff1a304"
 
-  iex> UUID.uuid1(:urn)
-  "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
-
+  iex> UUID.uuid1(:slug)
+  "zf2vRO41EeOEaxQQn_GjBA"
   ```
 
   """
@@ -277,6 +281,8 @@ defmodule UUID do
   iex> UUID.uuid3("cdfdaf44-ee35-11e3-846b-14109ff1a304", "my.domain.com")
   "8808f33a-3e11-3708-919e-15fba88908db"
 
+  iex> UUID.uuid3(:dns, "my.domain.com", :slug)
+  "A78HBrfpM7iu5cYUKoFkeA"
   ```
 
   """
@@ -329,6 +335,9 @@ defmodule UUID do
 
   iex> UUID.uuid4(:urn)
   "urn:uuid:fb49a0ec-d60c-4d20-9264-3b4cfe272106"
+
+  iex> UUID.uuid4(:slug)
+  "-0mg7NYMTSCSZDtM_ichBg"
   ```
 
   """
@@ -368,6 +377,8 @@ defmodule UUID do
   iex> UUID.uuid5("fb49a0ec-d60c-4d20-9264-3b4cfe272106", "my.domain.com")
   "822cab19-df58-5eb4-98b5-c96c15c76d32"
 
+  iex> UUID.uuid5("fb49a0ec-d60c-4d20-9264-3b4cfe272106", "my.domain.com", :slug)
+  "giyrGd9YXrSYtclsFcdtMg"
   ```
 
   """
@@ -420,18 +431,24 @@ defmodule UUID do
   defp uuid_to_string(<<u::128>>, :urn) do
     @urn <> uuid_to_string(<<u::128>>, :default)
   end
-  defp uuid_to_string(_u, format) when format in [:default, :hex, :urn] do
+  defp uuid_to_string(<<u::128>>, :slug) do
+    Base.url_encode64(<<u::128>>)
+    |> String.replace("+", "-", [global: true])
+    |> String.replace("/", "_", [global: true])
+    |> String.replace_trailing("=", "")
+  end
+  defp uuid_to_string(_u, format) when format in [:default, :hex, :urn, :slug] do
     raise ArgumentError, message:
     "Invalid binary data; Expected: <<uuid::128>>"
   end
   defp uuid_to_string(_u, format) do
     raise ArgumentError, message:
-    "Invalid format #{format}; Expected: :default|:hex|:urn"
+    "Invalid format #{format}; Expected: :default|:hex|:urn|:slug"
   end
 
   # Extract the type (:default etc) and pure byte value from a UUID String.
-  defp uuid_string_to_hex_pair(<<uuid::binary>>) do
-    uuid = String.downcase(uuid)
+  defp uuid_string_to_hex_pair(<<uuid_in::binary>>) do
+    uuid = String.downcase(uuid_in)
     {type, hex_str} = case uuid do
       <<u0::64, ?-, u1::32, ?-, u2::32, ?-, u3::32, ?-, u4::96>> ->
         {:default, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
@@ -440,8 +457,14 @@ defmodule UUID do
       <<@urn, u0::64, ?-, u1::32, ?-, u2::32, ?-, u3::32, ?-, u4::96>> ->
         {:urn, <<u0::64, u1::32, u2::32, u3::32, u4::96>>}
       _ ->
-        raise ArgumentError, message:
-          "Invalid argument; Not a valid UUID: #{uuid}"
+        case uuid_in do
+          _ when byte_size(uuid_in) == 22 ->
+            case Base.url_decode64(uuid_in <> "==") do
+              {:ok, decoded} -> {:slug, Base.encode16(decoded)}
+              _ -> raise ArgumentError, message: "Invalid argument; Not a valid UUID: #{uuid}"
+            end
+          _ -> raise ArgumentError, message: "Invalid argument; Not a valid UUID: #{uuid}"
+        end
     end
 
     try do
