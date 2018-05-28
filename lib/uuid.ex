@@ -432,10 +432,7 @@ defmodule UUID do
     @urn <> uuid_to_string(<<u::128>>, :default)
   end
   defp uuid_to_string(<<u::128>>, :slug) do
-    Base.url_encode64(<<u::128>>)
-    |> String.replace("+", "-", [global: true])
-    |> String.replace("/", "_", [global: true])
-    |> String.replace_trailing("=", "")
+    Base.url_encode64(<<u::128>>, [padding: false])
   end
   defp uuid_to_string(_u, format) when format in [:default, :hex, :urn, :slug] do
     raise ArgumentError, message:
