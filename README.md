@@ -9,7 +9,7 @@ UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 412
 
 ### Installation
 
-The latest version is `1.1.7` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
+The latest version is `1.1.8` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
 
 Releases are published through [hex.pm](https://hex.pm/packages/uuid). Add as a dependency in your `mix.exs` file:
 ```elixir
@@ -98,7 +98,7 @@ iex> UUID.uuid1(:urn)
 
 ### Utility functions
 
-Use `UUID.info!/1` to get a [keyword list](http://elixir-lang.org/getting_started/7.html#toc_1) containing information about the given UUID. An `ArgumentError` is raised if the argument is not a valid UUID string.
+Use `UUID.info/1` and `UUID.info!/1` to get a [keyword list](http://elixir-lang.org/getting_started/7.html#toc_1) containing information about the given UUID. `UUID.info/1` returns a tuple of `{:ok, info}` for valid cases or `{:error, reason}` if the argument is not a UUID string. `UUID.info!/1` directly returns the info keyword list when successful or raises an `ArgumentError` for error cases.
 ```elixir
 iex> UUID.info!("870df8e8-3107-4487-8316-81e089b8c2cf")
 [uuid: "870df8e8-3107-4487-8316-81e089b8c2cf",

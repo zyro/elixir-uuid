@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.1.8, 27 Sep 2017, Elixir `~> 1.0`
+
+* [Fix] Account for unsuitable hardware addresses when selecting UUID v1 node value.
+
 ### v1.1.7, 13 Mar 2017, Elixir `~> 1.0`
 
 * [Enhancement] Add `UUID.info/1` counterpart to `UUID.info!/1`.
