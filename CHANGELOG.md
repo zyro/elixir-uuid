@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.2.0, 24 Jun 2018, Elixir `~> 1.0`
+
+* [Breaking] Rename application from `:uuid` to `:elixir_uuid` to avoid potential collisions with other applications with the same name.
+
 ### v1.1.8, 27 Sep 2017, Elixir `~> 1.0`
 
 * [Fix] Account for unsuitable hardware addresses when selecting UUID v1 node value.
