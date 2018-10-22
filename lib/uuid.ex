@@ -56,6 +56,13 @@ defmodule UUID do
    version: 1,
    variant: :rfc4122]}
 
+  iex> UUID.info(<<39, 73, 196, 181, 29, 90, 74, 96, 157, 47, 171, 144, 84, 164, 155, 52>>)
+  {:ok, [uuid: <<39, 73, 196, 181, 29, 90, 74, 96, 157, 47, 171, 144, 84, 164, 155, 52>>,
+   binary: <<39, 73, 196, 181, 29, 90, 74, 96, 157, 47, 171, 144, 84, 164, 155, 52>>,
+   type: :raw,
+   version: 4,
+   variant: :rfc4122]}
+
   iex> UUID.info("12345")
   {:error, "Invalid argument; Not a valid UUID: 12345"}
 
@@ -109,6 +116,13 @@ defmodule UUID do
    version: 1,
    variant: :rfc4122]
 
+  iex> UUID.info!(<<39, 73, 196, 181, 29, 90, 74, 96, 157, 47, 171, 144, 84, 164, 155, 52>>)
+  [uuid: <<39, 73, 196, 181, 29, 90, 74, 96, 157, 47, 171, 144, 84, 164, 155, 52>>,
+   binary: <<39, 73, 196, 181, 29, 90, 74, 96, 157, 47, 171, 144, 84, 164, 155, 52>>,
+   type: :raw,
+   version: 4,
+   variant: :rfc4122]
+
   ```
 
   """
@@ -129,7 +143,7 @@ defmodule UUID do
   Convert binary UUID data to a string.
 
   Will raise an ArgumentError if the given binary is not valid UUID data, or
-  the format argument is not one of: `:default`, `:hex`, or `:urn`.
+  the format argument is not one of: `:default`, `:hex`, `:urn`, or `:raw`.
 
   ## Examples
 
@@ -145,6 +159,10 @@ defmodule UUID do
   iex> UUID.binary_to_string!(<<239, 27, 26, 40, 238, 52, 17, 227, 136,
   ...>        19, 20, 16, 159, 241, 163, 4>>, :urn)
   "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"
+
+  iex> UUID.binary_to_string!(<<39, 73, 196, 181, 29, 90, 74, 96, 157,
+  ...>        47, 171, 144, 84, 164, 155, 52>>, :raw)
+  <<39, 73, 196, 181, 29, 90, 74, 96, 157, 47, 171, 144, 84, 164, 155, 52>>
 
   ```
 
@@ -178,6 +196,10 @@ defmodule UUID do
   iex> UUID.string_to_binary!("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
   <<239, 27, 26, 40, 238, 52, 17, 227, 136, 19, 20, 16, 159, 241, 163, 4>>
 
+  iex> UUID.string_to_binary!(<<39, 73, 196, 181, 29, 90, 74, 96, 157, 47,
+  ...>        171, 144, 84, 164, 155, 52>>)
+  <<39, 73, 196, 181, 29, 90, 74, 96, 157, 47, 171, 144, 84, 164, 155, 52>>
+
   ```
 
   """
@@ -208,6 +230,9 @@ defmodule UUID do
   iex> UUID.uuid1(:urn)
   "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
 
+  iex> UUID.uuid1(:raw)
+  <<205, 253, 175, 68, 238, 53, 17, 227, 132, 107, 20, 16, 159, 241, 163, 4>>
+
   ```
 
   """
@@ -234,6 +259,9 @@ defmodule UUID do
 
   iex> UUID.uuid1(:urn)
   "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
+
+  iex> UUID.uuid1(:raw)
+  <<205, 253, 175, 68, 238, 53, 17, 227, 132, 107, 20, 16, 159, 241, 163, 4>>
 
   ```
 
@@ -273,6 +301,9 @@ defmodule UUID do
 
   iex> UUID.uuid3(:dns, "my.domain.com", :urn)
   "urn:uuid:03bf0706-b7e9-33b8-aee5-c6142a816478"
+
+  iex> UUID.uuid3(:dns, "my.domain.com", :raw)
+  <<3, 191, 7, 6, 183, 233, 51, 184, 174, 229, 198, 20, 42, 129, 100, 120>>
 
   iex> UUID.uuid3("cdfdaf44-ee35-11e3-846b-14109ff1a304", "my.domain.com")
   "8808f33a-3e11-3708-919e-15fba88908db"
@@ -329,6 +360,10 @@ defmodule UUID do
 
   iex> UUID.uuid4(:urn)
   "urn:uuid:fb49a0ec-d60c-4d20-9264-3b4cfe272106"
+
+  iex> UUID.uuid4(:raw)
+  <<251, 73, 160, 236, 214, 12, 77, 32, 146, 100, 59, 76, 254, 39, 33, 6>>
+
   ```
 
   """
@@ -364,6 +399,9 @@ defmodule UUID do
 
   iex> UUID.uuid5(:dns, "my.domain.com", :urn)
   "urn:uuid:016c25fd-70e0-56fe-9d1a-56e80fa20b82"
+
+  iex> UUID.uuid5(:dns, "my.domain.com", :raw)
+  <<1, 108, 37, 253, 112, 224, 86, 254, 157, 26, 86, 232, 15, 162, 11, 130>>
 
   iex> UUID.uuid5("fb49a0ec-d60c-4d20-9264-3b4cfe272106", "my.domain.com")
   "822cab19-df58-5eb4-98b5-c96c15c76d32"
@@ -420,6 +458,9 @@ defmodule UUID do
   defp uuid_to_string(<<u::128>>, :urn) do
     @urn <> uuid_to_string(<<u::128>>, :default)
   end
+  defp uuid_to_string(<<_::128>> = u, :raw) do
+    u
+  end
   defp uuid_to_string(_u, format) when format in [:default, :hex, :urn] do
     raise ArgumentError, message:
     "Invalid binary data; Expected: <<uuid::128>>"
@@ -430,6 +471,9 @@ defmodule UUID do
   end
 
   # Extract the type (:default etc) and pure byte value from a UUID String.
+  defp uuid_string_to_hex_pair(<<uuid::128>>) do
+    {:raw, <<uuid::128>>}
+  end
   defp uuid_string_to_hex_pair(<<uuid::binary>>) do
     uuid = String.downcase(uuid)
     {type, hex_str} = case uuid do
