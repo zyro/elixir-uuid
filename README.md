@@ -1,20 +1,22 @@
 Elixir UUID
 ===========
 
-[![hex.pm version](https://img.shields.io/hexpm/v/uuid.svg?style=flat)](https://hex.pm/packages/uuid)
-[![hex.pm downloads](https://img.shields.io/hexpm/dt/uuid.svg?style=flat)](https://hex.pm/packages/uuid)
+[![hex.pm version](https://img.shields.io/hexpm/v/elixir_uuid.svg?style=flat)](https://hex.pm/packages/elixir_uuid)
+[![hex.pm downloads](https://img.shields.io/hexpm/dt/elixir_uuid.svg?style=flat)](https://hex.pm/packages/elixir_uuid)
 [![travis.ci build status](https://img.shields.io/travis/zyro/elixir-uuid.svg?style=flat)](https://travis-ci.org/zyro/elixir-uuid)
 
 UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
 
+**Note:** Renamed from [uuid](https://hex.pm/packages/uuid) to [elixir_uuid](https://hex.pm/packages/elixir_uuid) as a solution to package name conflicts. Use [elixir_uuid](https://hex.pm/packages/elixir_uuid) going forward.
+
 ### Installation
 
-The latest version is `1.1.8` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
+The latest version is `1.2.0` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
 
-Releases are published through [hex.pm](https://hex.pm/packages/uuid). Add as a dependency in your `mix.exs` file:
+Releases are published through [hex.pm](https://hex.pm/packages/elixir_uuid). Add as a dependency in your `mix.exs` file:
 ```elixir
 defp deps do
-  [ { :uuid, "~> 1.1" } ]
+  [ { :elixir_uuid, "~> 1.2" } ]
 end
 ```
 
