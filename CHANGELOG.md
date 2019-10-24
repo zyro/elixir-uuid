@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.2.1, 24 Oct 2019, Elixir `~> 1.0`
+
+* [Enhancement] Improve `string_to_binary` and `binary_to_string` performance.
+
 ### v1.2.0, 24 Jun 2018, Elixir `~> 1.0`
 
 * [Breaking] Rename application from `:uuid` to `:elixir_uuid` to avoid potential collisions with other applications with the same name.
