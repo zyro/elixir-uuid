@@ -5,6 +5,47 @@ defmodule UUID do
   See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
   """
 
+  @typedoc "One of representations of UUID."
+  @type t :: str | raw | hex | urn
+
+  @typedoc "String representation of UUID."
+  @type str :: <<_ :: 288>>
+
+  @typedoc "Raw binary representation of UUID."
+  @type raw :: <<_ :: 128>>
+
+  @typedoc "Hex representation of UUID."
+  @type hex :: <<_ :: 256>>
+
+  @typedoc "URN representation of UUID."
+  @type urn :: <<_ :: 360>>
+
+  @typedoc "Type of UUID representation."
+  @type type :: :default | :raw | :hex | :urn
+
+  @typedoc "UUID version."
+  @type version :: 1 | 3 | 4 | 5
+
+  @typedoc "Variant of UUID: see RFC for the details."
+  @type variant :: :reserved_future
+                 | :reserved_microsoft
+                 | :rfc4122
+                 | :reserved_ncs
+
+  @typedoc """
+  Namespace for UUID v3 and v5 (with some predefined UUIDs as atom aliases).
+  """
+  @type namespace :: :dns | :url | :oid | :x500 | :nil | str
+
+  @typedoc "Information about given UUID (see `info/1`)"
+  @type info :: [
+      uuid: str,
+      binary: raw,
+      type: type,
+      version: version,
+      variant: variant
+    ]
+
   @nanosec_intervals_offset 122_192_928_000_000_000 # 15 Oct 1582 to 1 Jan 1970.
   @nanosec_intervals_factor 10 # Microseconds to nanoseconds factor.
 
@@ -69,6 +110,7 @@ defmodule UUID do
   ```
 
   """
+  @spec info(str) :: {:ok, info} | {:error, any}
   def info(uuid) do
     try do
       {:ok, UUID.info!(uuid)}
@@ -126,6 +168,7 @@ defmodule UUID do
   ```
 
   """
+  @spec info!(str) :: info
   def info!(<<uuid::binary>> = uuid_string) do
     {type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = <<uuid::128>>
@@ -167,6 +210,8 @@ defmodule UUID do
   ```
 
   """
+  @spec binary_to_string!(raw) :: str
+  @spec binary_to_string!(raw, type) :: t
   def binary_to_string!(uuid, format \\ :default)
   def binary_to_string!(<<uuid::binary>>, format) do
     uuid_to_string(<<uuid::binary>>, format)
@@ -203,6 +248,7 @@ defmodule UUID do
   ```
 
   """
+  @spec string_to_binary!(str) :: raw
   def string_to_binary!(<<uuid::binary>>) do
     {_type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
     <<uuid::128>>
@@ -238,6 +284,8 @@ defmodule UUID do
   ```
 
   """
+  @spec uuid1() :: str
+  @spec uuid1(type) :: t
   def uuid1(format \\ :default) do
     uuid1(uuid1_clockseq(), uuid1_node(), format)
   end
@@ -270,6 +318,8 @@ defmodule UUID do
   ```
 
   """
+  @spec uuid1(clock_seq :: <<_::14>>, node :: <<_::48>>) :: str
+  @spec uuid1(clock_seq :: <<_::14>>, node :: <<_::48>>, type) :: t
   def uuid1(clock_seq, node, format \\ :default)
   def uuid1(<<clock_seq::14>>, <<node::48>>, format) do
     <<time_hi::12, time_mid::16, time_low::32>> = uuid1_time()
@@ -317,6 +367,8 @@ defmodule UUID do
   ```
 
   """
+  @spec uuid3(namespace, name :: binary) :: str
+  @spec uuid3(namespace, name :: binary, type) :: t
   def uuid3(namespace_or_uuid, name, format \\ :default)
   def uuid3(:dns, <<name::binary>>, format) do
     namebased_uuid(:md5, <<0x6ba7b8109dad11d180b400c04fd430c8::128, name::binary>>)
@@ -375,8 +427,10 @@ defmodule UUID do
   ```
 
   """
+  @spec uuid4() :: str
   def uuid4(), do: uuid4(:default)
 
+  @spec uuid4(type | :strong | :weak) :: t
   def uuid4(:strong), do: uuid4(:default) # For backwards compatibility.
   def uuid4(:weak),   do: uuid4(:default) # For backwards compatibility.
   def uuid4(format) do
@@ -419,6 +473,8 @@ defmodule UUID do
   ```
 
   """
+  @spec uuid5(namespace, binary) :: str
+  @spec uuid5(namespace, name :: binary, type) :: t
   def uuid5(namespace_or_uuid, name, format \\ :default)
   def uuid5(:dns, <<name::binary>>, format) do
     namebased_uuid(:sha1, <<0x6ba7b8109dad11d180b400c04fd430c8::128, name::binary>>)
@@ -618,7 +674,7 @@ defmodule UUID do
   defp variant(_) do
     raise ArgumentError, message: "Invalid argument; Not valid variant bits"
   end
-  
+
   defp hex_str_to_binary(<< a1, a2, a3, a4, a5, a6, a7, a8,
                             b1, b2, b3, b4,
                             c1, c2, c3, c4,
@@ -633,7 +689,7 @@ defmodule UUID do
         d(e5)::4, d(e6)::4, d(e7)::4, d(e8)::4,
         d(e9)::4, d(e10)::4, d(e11)::4, d(e12)::4 >>
   end
-  
+
   @compile {:inline, d: 1}
 
   defp d(?0), do: 0
