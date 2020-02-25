@@ -123,11 +123,22 @@ defmodule UUID do
    version: 4,
    variant: :rfc4122]
 
+  iex> UUID.info("0000000000000000")
+  {:error, "Invalid argument; Not a valid UUID: 0000000000000000"}
+
   ```
 
   """
   def info!(<<uuid::binary>> = uuid_string) do
+    regex = ~r/[\w]{8}-?[\w]{4}-?[\w]{4}-?[\w]{4}-?[\w]{12}/
     {type, <<uuid::128>>} = uuid_string_to_hex_pair(uuid)
+
+    # A bitstring can be an invalid string, in which case its a raw UUID,
+    # otherwise we match it against a regex to see if it's a valid UUID.
+    if String.valid?(uuid_string), do:
+      if not String.match?(uuid_string, regex), do:
+        raise ArgumentError, message: "Invalid argument; Not a valid UUID: #{uuid_string}"
+
     <<_::48, version::4, _::12, v0::1, v1::1, v2::1, _::61>> = <<uuid::128>>
     [uuid: uuid_string,
      binary: <<uuid::128>>,
