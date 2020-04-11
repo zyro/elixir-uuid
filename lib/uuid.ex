@@ -239,7 +239,7 @@ defmodule UUID do
 
   """
   def uuid1(format \\ :default) do
-    uuid1(uuid1_clockseq(), uuid1_node(), format)
+    uuid1(uuid1_clockseq(), UUID.Node.get(), format)
   end
 
   @doc """
@@ -549,8 +549,7 @@ defmodule UUID do
 
   # Get unix epoch as a 60-bit timestamp.
   defp uuid1_time() do
-    {mega_sec, sec, micro_sec} = :os.timestamp()
-    epoch = (mega_sec * 1_000_000_000_000 + sec * 1_000_000 + micro_sec)
+    epoch = System.system_time(:microsecond)
     timestamp = @nanosec_intervals_offset + @nanosec_intervals_factor * epoch
     <<timestamp::60>>
   end
@@ -559,29 +558,6 @@ defmodule UUID do
   defp uuid1_clockseq() do
     <<rnd::14, _::2>> = :crypto.strong_rand_bytes(2)
     <<rnd::14>>
-  end
-
-  # Get local IEEE 802 (MAC) address, or a random node id if it can't be found.
-  defp uuid1_node() do
-    {:ok, ifs0} = :inet.getifaddrs()
-    uuid1_node(ifs0)
-  end
-
-  defp uuid1_node([{_if_name, if_config} | rest]) do
-    case :lists.keyfind(:hwaddr, 1, if_config) do
-      :false ->
-        uuid1_node(rest)
-      {:hwaddr, hw_addr} ->
-        if length(hw_addr) != 6 or Enum.all?(hw_addr, fn(n) -> n == 0 end) do
-          uuid1_node(rest)
-        else
-          :erlang.list_to_binary(hw_addr)
-        end
-    end
-  end
-  defp uuid1_node(_) do
-    <<rnd_hi::7, _::1, rnd_low::40>> = :crypto.strong_rand_bytes(6)
-    <<rnd_hi::7, 1::1, rnd_low::40>>
   end
 
   # Generate a hash of the given data.

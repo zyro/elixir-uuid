@@ -4,6 +4,10 @@ defmodule UUIDBench do
   @uuid_string "716c654f-d2b7-436b-9751-2440a9cb079d"
   @uuid_binary <<113, 108, 101, 79, 210, 183, 67, 107, 151, 81, 36, 64, 169, 203, 7, 157>>
 
+  setup_all do
+    Application.ensure_all_started(:elixir_uuid)
+  end
+
   bench "info!" do
     UUID.info!(@uuid_string)
   end
@@ -17,7 +21,7 @@ defmodule UUIDBench do
   end
 
   bench "uuid1" do
-    UUID.uuid1
+    UUID.uuid1()
     :ok
   end
 
@@ -26,12 +30,11 @@ defmodule UUIDBench do
   end
 
   bench "uuid4" do
-    UUID.uuid4
+    UUID.uuid4()
     :ok
   end
 
   bench "uuid5 dns" do
     UUID.uuid5(:dns, "test.example.com")
   end
-
 end
