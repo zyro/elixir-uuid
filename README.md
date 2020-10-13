@@ -62,6 +62,19 @@ iex> UUID.uuid5("fcfe5f21-8a08-4c9a-9f97-29d2fd6a27b9", "my.domain.com")
 "b8e85535-761a-586f-9c04-0fb0df2cbe84"
 ```
 
+### UUID v6
+
+Generated using a combination of time since the west adopted the gregorian calendar and either the node id MAC address or random bytes.
+Valid node types are `:mac_address` or `:random_bytes` and defaults to `:mac_address`.
+
+```elixir
+iex> UUID.uuid6()
+"1eb0d1d0-126a-6495-9a93-171634969e27"
+
+iex> UUID.uuid6(:random_bytes)
+"1eb0d1d5-c3fa-6b2e-8d7a-ef182baf6b94"
+```
+
 ### Formatting
 
 All UUID generator functions have an optional format parameter as the last argument.

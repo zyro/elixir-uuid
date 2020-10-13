@@ -13,6 +13,7 @@ defmodule UUID do
   @uuid_v3 3 # UUID v3 identifier.
   @uuid_v4 4 # UUID v4 identifier.
   @uuid_v5 5 # UUID v5 identifier.
+  @uuid_v6 6 # UUID v6 identifier.
 
   @urn "urn:uuid:" # UUID URN prefix.
 
@@ -450,6 +451,114 @@ defmodule UUID do
     "Invalid argument; Expected: :dns|:url|:oid|:x500|:nil OR String, String"
   end
 
+  @doc """
+  Generate a new UUID v6. This version uses a combination of one or more of:
+  unix epoch, random bytes, pid hash, and hardware address.
+
+  Accepts a `node_type` argument that can be either `:mac_address` or
+  `:random_bytes`. Defaults to `:mac_address`. However, if there is a security
+  concern with using a MAC address, use `:random_bytes`.
+
+  See the [RFC draft, section 3.3](https://tools.ietf.org/html/draft-peabody-dispatch-new-uuid-format-00#section-3.3)
+  for more information on the node parts.
+
+  ## Examples
+
+      iex> UUID.uuid6()
+      "1eb0d28f-da4c-6eb2-adc1-0242ac120002"
+
+      iex> UUID.uuid6(:random_bytes, :default)
+      "1eb0d297-eb1e-62a6-a37f-a55eda5dd6e4"
+
+      iex> UUID.uuid6(:random_bytes, :hex)
+      "1eb0d298502563fcadcd25e5d0a44c1a"
+
+      iex> UUID.uuid6(:random_bytes, :urn)
+      "urn:uuid:1eb0d298-ca10-6914-ab0e-7d7e1e6e1808"
+
+      iex> UUID.uuid6(:random_bytes, :raw)
+      <<30, 176, 210, 153, 52, 23, 102, 230, 164, 146, 99, 66, 4, 72, 220, 114>>
+
+      iex> UUID.uuid6(:random_bytes, :slug)
+      "HrDSmab8ZnqR4SKw4LN-UA"
+
+  """
+  def uuid6(node_type \\ :mac_address, format \\ :default)
+      when node_type in [:mac_address, :random_bytes] do
+    uuid6(uuid1_clockseq(), uuid6_node(node_type), format)
+  end
+
+  @doc """
+  Generate a new UUID v6, with an existing clock sequence and node address. This
+  version uses a combination of one or more of: unix epoch, random bytes,
+  pid hash, and hardware address.
+  """
+  def uuid6(<<clock_seq::14>>, <<node::48>>, format) do
+    <<time_hi::12, time_mid::16, time_low::32>> = uuid1_time()
+    <<time_low1::20, time_low2::12>> = <<time_low::32>>
+    <<clock_seq_hi::6, clock_seq_low::8>> = <<clock_seq::14>>
+
+    <<time_hi::12, time_mid::16, time_low1::20, @uuid_v6::4, time_low2::12,
+      @variant10::2, clock_seq_hi::6, clock_seq_low::8, node::48>>
+      |> uuid_to_string(format)
+  end
+  def uuid6(_, _, _) do
+    raise ArgumentError, message:
+    "Invalid argument; Expected: <<clock_seq::14>>, <<node::48>>"
+  end
+
+  @doc """
+  Convert a UUID v1 to a UUID v6 in the same format.
+
+  ## Examples
+
+      iex> UUID.uuid1_to_uuid6("dafc431a-0d21-11eb-adc1-0242ac120002")
+      "1eb0d21d-afc4-631a-adc1-0242ac120002"
+
+      iex> UUID.uuid1_to_uuid6("2vxDGg0hEeutwQJCrBIAAg")
+      "HrDSHa_EYxqtwQJCrBIAAg"
+
+      iex> UUID.uuid1_to_uuid6(<<218, 252, 67, 26, 13, 33, 17, 235, 173, 193, 2, 66, 172, 18, 0, 2>>)
+      <<30, 176, 210, 29, 175, 196, 99, 26, 173, 193, 2, 66, 172, 18, 0, 2>>
+
+  """
+  def uuid1_to_uuid6(uuid1) do
+    {format, ub1} = uuid_string_to_hex_pair(uuid1)
+    
+    <<time_low::32, time_mid::16, @uuid_v1::4, time_hi::12, rest::binary>> = ub1
+    <<time_low1::20, time_low2::12>> = <<time_low::32>>
+
+    <<time_hi::12, time_mid::16, time_low1::20, @uuid_v6::4, time_low2::12,
+      rest::binary>>
+      |> uuid_to_string(format)
+  end
+
+  @doc """
+  Convert a UUID v6 to a UUID v1 in the same format.
+
+  ## Examples
+
+      iex> UUID.uuid6_to_uuid1("1eb0d21d-afc4-631a-adc1-0242ac120002")
+      "dafc431a-0d21-11eb-adc1-0242ac120002"
+
+      iex> UUID.uuid6_to_uuid1("HrDSHa_EYxqtwQJCrBIAAg")
+      "2vxDGg0hEeutwQJCrBIAAg"
+
+      iex> UUID.uuid6_to_uuid1(<<30, 176, 210, 29, 175, 196, 99, 26, 173, 193, 2, 66, 172, 18, 0, 2>>)
+      <<218, 252, 67, 26, 13, 33, 17, 235, 173, 193, 2, 66, 172, 18, 0, 2>>
+
+  """
+  def uuid6_to_uuid1(uuid6) do
+    {format, ub6} = uuid_string_to_hex_pair(uuid6)
+    
+    <<time_hi::12, time_mid::16, time_low1::20, @uuid_v6::4, time_low2::12,
+      rest::binary>> = ub6
+    <<time_low::32>> = <<time_low1::20, time_low2::12>>
+
+    <<time_low::32, time_mid::16, @uuid_v1::4, time_hi::12, rest::binary>>
+    |> uuid_to_string(format)
+  end
+
   #
   # Internal utility functions.
   #
@@ -582,6 +691,13 @@ defmodule UUID do
   defp uuid1_node(_) do
     <<rnd_hi::7, _::1, rnd_low::40>> = :crypto.strong_rand_bytes(6)
     <<rnd_hi::7, 1::1, rnd_low::40>>
+  end
+
+  defp uuid6_node(:mac_address) do
+    uuid1_node()
+  end
+  defp uuid6_node(:random_bytes) do
+    :crypto.strong_rand_bytes(6)
   end
 
   # Generate a hash of the given data.

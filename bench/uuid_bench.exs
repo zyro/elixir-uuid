@@ -34,4 +34,13 @@ defmodule UUIDBench do
     UUID.uuid5(:dns, "test.example.com")
   end
 
+  bench "uuid6 mac_address" do
+    UUID.uuid6(:mac_address)
+    :ok
+  end
+
+  bench "uuid6 random_bytes" do
+    UUID.uuid6(:random_bytes)
+    :ok
+  end
 end
