@@ -24,9 +24,12 @@ defmodule UUID.Mixfile do
 
   # List of dependencies.
   defp deps do
-    [{:ex_doc, "~> 0.19", only: :dev},
-     {:earmark, "~> 1.2", only: :dev},
-     {:benchfella, "~> 0.3", only: :dev}]
+    [
+      {:ex_doc, "~> 0.19", only: :dev},
+      {:earmark, "~> 1.2", only: :dev},
+      {:benchfella, "~> 0.3", only: :dev},
+      {:dialyxir, only: :dev}
+    ]
   end
 
   # Description.
