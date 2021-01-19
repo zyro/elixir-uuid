@@ -1,9 +1,13 @@
 ## build system files
-_build/
-deps/
-doc/
+/_build/
+/cover/
+/deps/
+/doc/
+/.fetch
 erl_crash.dump
 *.ez
+elixir_uuid-*.tar
+/tmp
 
 ## Benchmark results files
 bench/snapshots/

@@ -1,9 +1,12 @@
 Elixir UUID
 ===========
 
-[![hex.pm version](https://img.shields.io/hexpm/v/elixir_uuid.svg?style=flat)](https://hex.pm/packages/elixir_uuid)
-[![hex.pm downloads](https://img.shields.io/hexpm/dt/elixir_uuid.svg?style=flat)](https://hex.pm/packages/elixir_uuid)
 [![travis.ci build status](https://img.shields.io/travis/zyro/elixir-uuid.svg?style=flat)](https://travis-ci.org/zyro/elixir-uuid)
+[![hex.pm version](https://img.shields.io/hexpm/v/elixir_uuid.svg?style=flat)](https://hex.pm/packages/elixir_uuid)
+[![hexdocs.pm docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/elixir_uuid/)
+[![hex.pm downloads](https://img.shields.io/hexpm/dt/elixir_uuid.svg?style=flat)](https://hex.pm/packages/elixir_uuid)
+[![License](https://img.shields.io/hexpm/l/elixir_uuid.svg)](https://github.com/zyro/elixir-uuid/blob/master/LICENSE)
+[![Last Updated](https://img.shields.io/github/last-commit/zyro/elixir-uuid.svg)](https://github.com/zyro/elixir-uuid/commits/master)
 
 UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
 
@@ -22,7 +25,7 @@ end
 
 ### UUID v1
 
-Generated using a combination of time since the west adopted the gregorian calendar and the node id MAC address.
+Generated using a combination of time since the west adopted the Gregorian calendar and the node id MAC address.
 
 ```elixir
 iex> UUID.uuid1()
@@ -164,7 +167,7 @@ Some helper functions from [rjsamson/hexate](https://github.com/rjsamson/hexate)
 ### License
 
 ```
-Copyright 2014-2016 Andrei Mihu
+Copyright 2014-2021 Andrei Mihu
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
