@@ -7,9 +7,11 @@ Elixir UUID
 
 UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
 
+**Note: As of version 1.2, this library has renamed from [uuid](https://hex.pm/packages/uuid) to [elixir_uuid](https://hex.pm/packages/elixir_uuid) as a solution to package name conflicts. Use [elixir_uuid](https://hex.pm/packages/elixir_uuid) going forward.**
+
 ### Installation
 
-The latest version is `1.1.8` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
+The latest pre-rename version is `1.1.9` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
 
 Releases are published through [hex.pm](https://hex.pm/packages/uuid). Add as a dependency in your `mix.exs` file:
 ```elixir
