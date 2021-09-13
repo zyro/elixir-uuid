@@ -40,7 +40,7 @@ defmodule UUID.Mixfile do
   defp package do
     [files: ["lib", "mix.exs", "README.md", "LICENSE"],
      maintainers: ["Andrei Mihu"],
-     licenses: ["Apache 2.0"],
+     licenses: ["Apache-2.0"],
      links: %{"GitHub" => "https://github.com/zyro/elixir-uuid"}]
   end
 
