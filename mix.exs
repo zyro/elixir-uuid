@@ -19,7 +19,9 @@ defmodule UUID.Mixfile do
 
   # Application configuration.
   def application do
-    []
+    [
+      extra_applications: [:crypto]
+    ]
   end
 
   # List of dependencies.
