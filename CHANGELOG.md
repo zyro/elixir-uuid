@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.2.2, 10 Feb 2022, Elixir `~> 1.13`
+
+* [Fix] Fix warnings presented in the compilation time due to `:crypto`.
+
 ### v1.2.1, 24 Oct 2019, Elixir `~> 1.0`
 
 * [Enhancement] Improve `string_to_binary` and `binary_to_string` performance.
