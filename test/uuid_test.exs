@@ -47,4 +47,61 @@ defmodule UUIDTest do
     end
   end
 
+  describe "uuid1" do
+    test "generate a UUIDv1 with no args" do
+      info = UUID.uuid1() |> UUID.info!()
+      assert info[:type] == :default
+      assert <<_::128>> = info[:binary]
+    end
+
+    test "generate a UUIDv1 with a type" do
+      info = UUID.uuid1(:hex) |> UUID.info!()
+      assert info[:type] == :hex
+      assert <<_::128>> = info[:binary]
+    end
+
+    test "generate a UUIDv1 with a provided clock_seq and node" do
+      info = UUID.uuid1(<<1::6, 2::8>>, <<3, 4, 5, 6, 7, 8>>) |> UUID.info!()
+      assert info[:type] == :default
+      assert <<_::66, 1::6, 2, 3, 4, 5, 6, 7, 8>> = info[:binary]
+    end
+
+    test "generate a UUIDv1 with a provided clock_seq, node, and type" do
+      info = UUID.uuid1(<<1::6, 2::8>>, <<3, 4, 5, 6, 7, 8>>, :hex) |> UUID.info!()
+      assert info[:type] == :hex
+      assert <<_::66, 1::6, 2, 3, 4, 5, 6, 7, 8>> = info[:binary]
+    end
+
+    test "the default time represents 'now'" do
+      {:ok, time} = UUID.uuid1() |> UUID.uuid1_gettime()
+      assert DateTime.diff(DateTime.now!("Etc/UTC"), time, :millisecond) < 1000
+    end
+
+    test "generate a UUIDv1 with a provided time (bitstring), clock_seq, node, and type" do
+      timestamp = <<30, 208, 69, 18, 82, 149, 94, 0::size(4)>>  # ~U[2022-07-15 15:16:48.068144Z]
+      uuid = UUID.uuid1(timestamp, <<1::6, 2::8>>, <<3, 4, 5, 6, 7, 8>>, :hex)
+      {:ok, time} = UUID.uuid1_gettime(uuid)
+      assert time == ~U[2022-07-15 15:16:48.068144Z]
+    end
+
+    test "generate a UUIDv1 with a provided time (DateTime), clock_seq, node, and type" do
+      timestamp = ~U[2022-07-15 15:16:48.068144Z]
+      uuid = UUID.uuid1(timestamp, <<1::6, 2::8>>, <<3, 4, 5, 6, 7, 8>>, :hex)
+      {:ok, time} = UUID.uuid1_gettime(uuid)
+      assert time == timestamp
+    end
+  end
+
+  describe "uuid1_gettime" do
+    test "invalid arguments" do
+      assert UUID.uuid1_gettime(0) == {:error, "Invalid argument; Expected: String"}
+      assert UUID.uuid1_gettime(UUID.uuid4()) == {:error, "Invalid argument; Expected a UUIDv1 variant 2"}
+    end
+
+    test "gets time from a string or binary uuid" do
+      assert {:ok, %DateTime{}} = UUID.uuid1_gettime(UUID.uuid1())
+      assert {:ok, %DateTime{}} = UUID.uuid1_gettime(UUID.uuid1(:raw))
+    end
+  end
+
 end

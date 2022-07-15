@@ -270,17 +270,41 @@ defmodule UUID do
   ```
 
   """
-  def uuid1(clock_seq, node, format \\ :default)
-  def uuid1(<<clock_seq::14>>, <<node::48>>, format) do
-    <<time_hi::12, time_mid::16, time_low::32>> = uuid1_time()
+  def uuid1(time, clock_seq, node, format)
+  def uuid1(time = %DateTime{}, clock_seq, node, format) do
+    uuid1(uuid1_time(time), clock_seq, node, format)
+  end
+  def uuid1(<<time::60>>, <<clock_seq::14>>, <<node::48>>, format) do
+    <<time_hi::12, time_mid::16, time_low::32>> = <<time::60>>
     <<clock_seq_hi::6, clock_seq_low::8>> = <<clock_seq::14>>
     <<time_low::32, time_mid::16, @uuid_v1::4, time_hi::12, @variant10::2,
       clock_seq_hi::6, clock_seq_low::8, node::48>>
       |> uuid_to_string(format)
   end
-  def uuid1(_, _, _) do
+  def uuid1(_, _, _, _) do
     raise ArgumentError, message:
     "Invalid argument; Expected: <<clock_seq::14>>, <<node::48>>"
+  end
+
+  def uuid1(clock_seq, node, format \\ :default) do
+    uuid1(uuid1_time(), clock_seq, node, format)
+  end
+
+  def uuid1_gettime(uuid)
+  def uuid1_gettime(<<time_low::32, time_mid::16, @uuid_v1::4, time_hi::12, @variant10::2, _::62>>) do
+    goofy_time = :binary.decode_unsigned(<<0::4, time_hi::12, time_mid::16, time_low::32>>, :big)
+    posix_time_usec = (goofy_time - @nanosec_intervals_offset) |> Integer.floor_div(10)
+    {:ok, DateTime.from_unix!(posix_time_usec, :microsecond)}
+  end
+
+  def uuid1_gettime(<<_::128>>) do
+    {:error, "Invalid argument; Expected a UUIDv1 variant 2"}
+  end
+
+  def uuid1_gettime(uuid) do
+    with {:ok, info} <- info(uuid) do
+      uuid1_gettime(info[:binary])
+    end
   end
 
   @doc """
@@ -547,11 +571,19 @@ defmodule UUID do
     end
   end
 
-  # Get unix epoch as a 60-bit timestamp.
+  # Get a 60-bit timestamp. Without args, use "now". One arg should be either a DateTime
+  # or microseconds since Unix epoch.
   defp uuid1_time() do
     {mega_sec, sec, micro_sec} = :os.timestamp()
-    epoch = (mega_sec * 1_000_000_000_000 + sec * 1_000_000 + micro_sec)
-    timestamp = @nanosec_intervals_offset + @nanosec_intervals_factor * epoch
+    uuid1_time(mega_sec * 1_000_000_000_000 + sec * 1_000_000 + micro_sec)
+  end
+
+  defp uuid1_time(dt = %DateTime{}) do
+    uuid1_time(DateTime.to_unix(dt, :microsecond))
+  end
+
+  defp uuid1_time(posix_time_microseconds) when is_integer(posix_time_microseconds) do
+    timestamp = @nanosec_intervals_offset + @nanosec_intervals_factor * posix_time_microseconds
     <<timestamp::60>>
   end
 
@@ -618,7 +650,7 @@ defmodule UUID do
   defp variant(_) do
     raise ArgumentError, message: "Invalid argument; Not valid variant bits"
   end
-  
+
   defp hex_str_to_binary(<< a1, a2, a3, a4, a5, a6, a7, a8,
                             b1, b2, b3, b4,
                             c1, c2, c3, c4,
@@ -633,7 +665,7 @@ defmodule UUID do
         d(e5)::4, d(e6)::4, d(e7)::4, d(e8)::4,
         d(e9)::4, d(e10)::4, d(e11)::4, d(e12)::4 >>
   end
-  
+
   @compile {:inline, d: 1}
 
   defp d(?0), do: 0
