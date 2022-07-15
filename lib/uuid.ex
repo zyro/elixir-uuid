@@ -252,9 +252,11 @@ defmodule UUID do
   See `uuid/1` for examples.
   """
   def uuid1(time, clock_seq, node, format)
-  def uuid1(time = %DateTime{}, clock_seq, node, format) do
-    uuid1(uuid1_time(time), clock_seq, node, format)
-  end
+  def uuid1(time = %DateTime{}, clock_seq, node, format), do: uuid1(uuid1_time(time), clock_seq, node, format)
+  def uuid1(nil, clock_seq, node, format), do: uuid1(uuid1_time(), clock_seq, node, format)
+  def uuid1(time, nil, node, format), do: uuid1(time, uuid1_clockseq(), node, format)
+  def uuid1(time, clock_seq, nil, format), do: uuid1(time, clock_seq, uuid1_node(), format)
+  def uuid1(time, clock_seq, node, nil), do: uuid1(time, clock_seq, node, :default)
   def uuid1(<<time::60>>, <<clock_seq::14>>, <<node::48>>, format) do
     <<time_hi::12, time_mid::16, time_low::32>> = <<time::60>>
     <<clock_seq_hi::6, clock_seq_low::8>> = <<clock_seq::14>>
