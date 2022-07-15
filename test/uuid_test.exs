@@ -104,4 +104,15 @@ defmodule UUIDTest do
     end
   end
 
+  describe "uuid1_gettime!" do
+    test "invalid arguments" do
+      assert_raise MatchError, fn -> UUID.uuid1_gettime!(0) end
+      assert_raise MatchError, fn -> UUID.uuid1_gettime!(UUID.uuid4()) end
+    end
+
+    test "gets time from a string or binary uuid" do
+      assert %DateTime{} = UUID.uuid1_gettime!(UUID.uuid1())
+      assert %DateTime{} = UUID.uuid1_gettime!(UUID.uuid1(:raw))
+    end
+  end
 end

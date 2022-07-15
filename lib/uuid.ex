@@ -299,6 +299,11 @@ defmodule UUID do
     end
   end
 
+  def uuid1_gettime!(uuid) do
+    {:ok, time} = uuid1_gettime(uuid)
+    time
+  end
+
   @doc """
   Generate a new UUID v3. This version uses an MD5 hash of fixed value (chosen
   based on a namespace atom - see Appendix C of
