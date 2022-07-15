@@ -243,32 +243,13 @@ defmodule UUID do
   end
 
   @doc """
-  Generate a new UUID v1, with an existing clock sequence and node address. This
+  Generate a new UUID v1, with an existing time, clock sequence and node address. This
   version uses a combination of one or more of: unix epoch, random bytes,
   pid hash, and hardware address.
 
-  ## Examples
+  The provided `time` may be either a 60-bit bitstring (`<<time::60>>`) or a `DateTime`.
 
-  ```elixir
-  iex> UUID.uuid1()
-  "cdfdaf44-ee35-11e3-846b-14109ff1a304"
-
-  iex> UUID.uuid1(:default)
-  "cdfdaf44-ee35-11e3-846b-14109ff1a304"
-
-  iex> UUID.uuid1(:hex)
-  "cdfdaf44ee3511e3846b14109ff1a304"
-
-  iex> UUID.uuid1(:urn)
-  "urn:uuid:cdfdaf44-ee35-11e3-846b-14109ff1a304"
-
-  iex> UUID.uuid1(:raw)
-  <<205, 253, 175, 68, 238, 53, 17, 227, 132, 107, 20, 16, 159, 241, 163, 4>>
-
-  iex> UUID.uuid1(:slug)
-  "zf2vRO41EeOEaxQQn_GjBA"
-  ```
-
+  See `uuid/1` for examples.
   """
   def uuid1(time, clock_seq, node, format)
   def uuid1(time = %DateTime{}, clock_seq, node, format) do
@@ -286,10 +267,21 @@ defmodule UUID do
     "Invalid argument; Expected: <<clock_seq::14>>, <<node::48>>"
   end
 
+  @doc """
+  Generate a new UUID v1, with an existing clock sequence and node address. This
+  version uses a combination of one or more of: unix epoch, random bytes,
+  pid hash, and hardware address.
+
+  See `uuid/1` for examples.
+  """
   def uuid1(clock_seq, node, format \\ :default) do
     uuid1(uuid1_time(), clock_seq, node, format)
   end
 
+  @doc """
+  Extract and return the timestamp from a UUIDv1 (variant 2) as a `DateTime`. The UUID may be
+  provided in any of the formats accepted by `info/1`.
+  """
   def uuid1_gettime(uuid)
   def uuid1_gettime(<<time_low::32, time_mid::16, @uuid_v1::4, time_hi::12, @variant10::2, _::62>>) do
     goofy_time = :binary.decode_unsigned(<<0::4, time_hi::12, time_mid::16, time_low::32>>, :big)

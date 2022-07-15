@@ -3,7 +3,8 @@ Changelog
 
 ### Unreleased changes
 
-None.
+* [Enhancement] A new 4-arity function `UUID.uuid1/4` has been added which allows the caller to provide the timestamp for the UUIDv1 as either a 60-bit bitstring (`<<time::60>>`) or a `DateTime`.
+* [Enhancement] A new function `uuid1_gettime/1` has been added which takes a UUIDv1 (either string or binary) and returns the extracted timestamp as a `DateTime` object.
 
 ---
 
