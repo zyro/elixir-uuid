@@ -11,7 +11,7 @@ defmodule UUID.Mixfile do
      docs: [extras: ["README.md", "CHANGELOG.md"],
             main: "readme",
             source_ref: "v#{@version}"],
-     source_url: "https://github.com/zyro/elixir-uuid",
+     source_url: "https://github.com/avenueplace/elixir-uuid",
      description: description(),
      package: package(),
      deps: deps()]
@@ -39,9 +39,9 @@ defmodule UUID.Mixfile do
   # Package info.
   defp package do
     [files: ["lib", "mix.exs", "README.md", "LICENSE"],
-     maintainers: ["Andrei Mihu"],
+     maintainers: ["Avenue.place"],
      licenses: ["Apache 2.0"],
-     links: %{"GitHub" => "https://github.com/zyro/elixir-uuid"}]
+     links: %{"GitHub" => "https://github.com/avenueplace/elixir-uuid"}]
   end
 
 end
