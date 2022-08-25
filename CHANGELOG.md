@@ -2,8 +2,9 @@
 
 ### Unreleased changes
 
-- [Internal] Fix documentation auto-linking warnings.
-- [Enhancement] Upgrade ExDocs from 0.21.2 to 0.28.5.
+- Fix compilation warning by adding `:crypto` to the extra applications.
+- Fix documentation auto-linking warnings.
+- Upgrade ExDocs from 0.21.2 to 0.28.5.
 
 ---
 
