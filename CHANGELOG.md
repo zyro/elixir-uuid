@@ -3,7 +3,7 @@
 ### Unreleased changes
 
 - [Internal] Fix documentation auto-linking warnings.
-- [Enhancement] Upgrade ExDocs from 0.21.2 to 0.25.5.
+- [Enhancement] Upgrade ExDocs from 0.21.2 to 0.26.0.
 
 ---
 
