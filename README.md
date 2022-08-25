@@ -1,28 +1,36 @@
-Elixir UUID
-===========
+# Elixir UUID
 
-[![hex.pm version](https://img.shields.io/hexpm/v/elixir_uuid.svg?style=flat)](https://hex.pm/packages/elixir_uuid)
-[![hex.pm downloads](https://img.shields.io/hexpm/dt/elixir_uuid.svg?style=flat)](https://hex.pm/packages/elixir_uuid)
-[![travis.ci build status](https://img.shields.io/travis/zyro/elixir-uuid.svg?style=flat)](https://travis-ci.org/zyro/elixir-uuid)
+> This project was forked from [zyro/elixir-uuid] and its maintenance is focused
+> on our internal usage at Avenue. Feel free to use it as is, and reach out to
+> us through an issue or pull-request. We'll gladly consider your suggestions
+> and contributions.
 
-UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
+UUID generator and utilities for [Elixir](http://elixir-lang.org/). See [RFC
+4122](http://www.ietf.org/rfc/rfc4122.txt).
 
-**Note:** Renamed from [uuid](https://hex.pm/packages/uuid) to [elixir_uuid](https://hex.pm/packages/elixir_uuid) as a solution to package name conflicts. Use [elixir_uuid](https://hex.pm/packages/elixir_uuid) going forward.
+## Installation
 
-### Installation
+The latest version is `1.2.1` and requires Elixir `~> 1.0`. New releases may
+change this minimum compatible version depending on breaking language changes.
+The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md)
+lists every available release and its corresponding language version
+requirement.
 
-The latest version is `1.2.0` and requires Elixir `~> 1.0`. New releases may change this minimum compatible version depending on breaking language changes. The [changelog](https://github.com/zyro/elixir-uuid/blob/master/CHANGELOG.md) lists every available release and its corresponding language version requirement.
+Releases are published through [hex.pm](https://hex.pm/packages/elixir_uuid).
+Add as a dependency in your `mix.exs` file:
 
-Releases are published through [hex.pm](https://hex.pm/packages/elixir_uuid). Add as a dependency in your `mix.exs` file:
 ```elixir
 defp deps do
-  [ { :elixir_uuid, "~> 1.2" } ]
+  [ { :elixir_uuid, github: "avenueplace/elixir-uuid", tag: "v1.2.1" } ]
 end
 ```
 
+## Usage
+
 ### UUID v1
 
-Generated using a combination of time since the west adopted the gregorian calendar and the node id MAC address.
+Generated using a combination of time since the west adopted the gregorian
+calendar and the node id MAC address.
 
 ```elixir
 iex> UUID.uuid1()
@@ -31,7 +39,8 @@ iex> UUID.uuid1()
 
 ### UUID v3
 
-Generated using the MD5 hash of a name and either a namespace atom or an existing UUID. Valid namespaces are: `:dns`, `:url`, `:oid`, `:x500`, `:nil`.
+Generated using the MD5 hash of a name and either a namespace atom or an
+existing UUID. Valid namespaces are: `:dns`, `:url`, `:oid`, `:x500`, `:nil`.
 
 ```elixir
 iex> UUID.uuid3(:dns, "my.domain.com")
@@ -52,7 +61,8 @@ iex> UUID.uuid4()
 
 ### UUID v5
 
-Generated using the SHA1 hash of a name and either a namespace atom or an existing UUID. Valid namespaces are: `:dns`, `:url`, `:oid`, `:x500`, `:nil`.
+Generated using the SHA1 hash of a name and either a namespace atom or an
+existing UUID. Valid namespaces are: `:dns`, `:url`, `:oid`, `:x500`, `:nil`.
 
 ```elixir
 iex> UUID.uuid5(:dns, "my.domain.com")
@@ -64,11 +74,14 @@ iex> UUID.uuid5("fcfe5f21-8a08-4c9a-9f97-29d2fd6a27b9", "my.domain.com")
 
 ### Formatting
 
-All UUID generator functions have an optional format parameter as the last argument.
+All UUID generator functions have an optional format parameter as the last
+argument.
 
-Possible values: `:default`, `:hex`, `:urn`. Default value is `:default` and can be omitted.
+Possible values: `:default`, `:hex`, `:urn`. Default value is `:default` and can
+be omitted.
 
 `:default` is a standard UUID representation:
+
 ```elixir
 iex> UUID.uuid1()
 "3c69679f-774b-4fb1-80c1-7b29c6e7d0a0"
@@ -83,7 +96,9 @@ iex> UUID.uuid5(:dns, "my.domain.com", :default)
 "016c25fd-70e0-56fe-9d1a-56e80fa20b82"
 ```
 
-`:hex` is a valid hex string, corresponding to the standard UUID without the `-` (dash) characters:
+`:hex` is a valid hex string, corresponding to the standard UUID without the `-`
+(dash) characters:
+
 ```elixir
 iex> UUID.uuid4(:hex)
 "19be859d0c1f4a7f95ddced995037350"
@@ -93,6 +108,7 @@ iex> UUID.uuid4(:weak, :hex)
 ```
 
 `:urn` is a standard UUID representation prefixed with the UUID URN:
+
 ```elixir
 iex> UUID.uuid1(:urn)
 "urn:uuid:b7483bde-ee35-11e3-8daa-14109ff1a304"
@@ -100,7 +116,13 @@ iex> UUID.uuid1(:urn)
 
 ### Utility functions
 
-Use `UUID.info/1` and `UUID.info!/1` to get a [keyword list](http://elixir-lang.org/getting_started/7.html#toc_1) containing information about the given UUID. `UUID.info/1` returns a tuple of `{:ok, info}` for valid cases or `{:error, reason}` if the argument is not a UUID string. `UUID.info!/1` directly returns the info keyword list when successful or raises an `ArgumentError` for error cases.
+Use `UUID.info/1` and `UUID.info!/1` to get a [keyword
+list](http://elixir-lang.org/getting_started/7.html#toc_1) containing
+information about the given UUID. `UUID.info/1` returns a tuple of `{:ok, info}`
+for valid cases or `{:error, reason}` if the argument is not a UUID string.
+`UUID.info!/1` directly returns the info keyword list when successful or raises
+an `ArgumentError` for error cases.
+
 ```elixir
 iex> UUID.info!("870df8e8-3107-4487-8316-81e089b8c2cf")
 [uuid: "870df8e8-3107-4487-8316-81e089b8c2cf",
@@ -124,7 +146,10 @@ iex> UUID.info!("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
  variant: :rfc4122]
 ```
 
-Use `UUID.string_to_binary!/1` to convert a valid UUID string to its raw binary equivalent. An `ArgumentError` is raised if the argument is not a valid UUID string.
+Use `UUID.string_to_binary!/1` to convert a valid UUID string to its raw binary
+equivalent. An `ArgumentError` is raised if the argument is not a valid UUID
+string.
+
 ```elixir
 iex> UUID.string_to_binary!("870df8e8-3107-4487-8316-81e089b8c2cf")
 <<135, 13, 248, 232, 49, 7, 68, 135, 131,
@@ -140,7 +165,11 @@ iex> UUID.string_to_binary!("urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304")
             19, 20, 16, 159, 241, 163, 4>>
 ```
 
-Use `UUID.binary_to_string!/2` to convert valid UUID binary data to a String representation, with an optional format similar to the generator functions above. An `ArgumentError` is raised if the argument is not valid UUID binary data.
+Use `UUID.binary_to_string!/2` to convert valid UUID binary data to a String
+representation, with an optional format similar to the generator functions
+above. An `ArgumentError` is raised if the argument is not valid UUID binary
+data.
+
 ```elixir
 iex> UUID.binary_to_string!(<<135, 13, 248, 232, 49, 7, 68, 135, 131,
             22, 129, 224, 137, 184, 194, 207>>)
@@ -155,16 +184,19 @@ iex> UUID.binary_to_string!(<<239, 27, 26, 40, 238, 52, 17, 227, 136,
 "urn:uuid:ef1b1a28-ee34-11e3-8813-14109ff1a304"
 ```
 
-### Attribution
+## Attribution
 
-Some code ported from [avtobiff/erlang-uuid](https://github.com/avtobiff/erlang-uuid).
+Forked from [zyro/elixir-uuid].
 
-Some helper functions from [rjsamson/hexate](https://github.com/rjsamson/hexate).
+Some code ported from [avtobiff/erlang-uuid].
 
-### License
+Some helper functions from [rjsamson/hexate].
+
+## License
 
 ```
-Copyright 2014-2016 Andrei Mihu
+Copyright 2022 Infinite Turtles, Lda
+Copyright 2014-2022 Andrei Mihu
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -178,3 +210,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+[zyro/elixir-uuid]: https://github.com/zyro/elixir-uuid
+[avtobiff/erlang-uuid]: https://github.com/avtobiff/erlang-uuid
+[rjsamson/hexate]: https://github.com/rjsamson/hexate
