@@ -21,7 +21,9 @@ Add as a dependency in your `mix.exs` file:
 
 ```elixir
 defp deps do
-  [ { :elixir_uuid, github: "avenueplace/elixir-uuid", tag: "v1.2.1" } ]
+  [
+    { :elixir_uuid, github: "avenueplace/elixir-uuid", tag: "v1.2.1" }
+  ]
 end
 ```
 
@@ -194,23 +196,22 @@ Some helper functions from [rjsamson/hexate].
 
 ## License
 
-```
 Copyright 2022 Infinite Turtles, Lda
-Copyright 2014-2022 Andrei Mihu
+
+Copyright 2014-2022 [Andrei Mihu]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0.
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-```
 
 [zyro/elixir-uuid]: https://github.com/zyro/elixir-uuid
 [avtobiff/erlang-uuid]: https://github.com/avtobiff/erlang-uuid
 [rjsamson/hexate]: https://github.com/rjsamson/hexate
+[andrei mihu]: https://github.com/zyro
