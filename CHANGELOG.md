@@ -1,6 +1,6 @@
 # Changelog
 
-### Unreleased changes
+### 1.2.2 (2022-08-25)
 
 - Fix compilation warning by adding `:crypto` to the extra applications.
 - Fix documentation auto-linking warnings.
