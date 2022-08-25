@@ -4,17 +4,17 @@ defmodule UUID.Mixfile do
   @version "1.2.1"
 
   def project do
-    [app: :elixir_uuid,
-     name: "UUID",
-     version: @version,
-     elixir: "~> 1.7",
-     docs: [extras: ["README.md", "CHANGELOG.md"],
-            main: "readme",
-            source_ref: "v#{@version}"],
-     source_url: "https://github.com/avenueplace/elixir-uuid",
-     description: description(),
-     package: package(),
-     deps: deps()]
+    [
+      app: :elixir_uuid,
+      name: "UUID",
+      version: @version,
+      elixir: "~> 1.7",
+      docs: [extras: ["README.md", "CHANGELOG.md"], main: "readme", source_ref: "v#{@version}"],
+      source_url: "https://github.com/avenueplace/elixir-uuid",
+      description: description(),
+      package: package(),
+      deps: deps()
+    ]
   end
 
   # Application configuration.
@@ -24,9 +24,12 @@ defmodule UUID.Mixfile do
 
   # List of dependencies.
   defp deps do
-    [{:ex_doc, "~> 0.19", only: :dev},
-     {:earmark, "~> 1.2", only: :dev},
-     {:benchfella, "~> 0.3", only: :dev}]
+    [
+      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.19", only: :dev},
+      {:earmark, "~> 1.2", only: :dev},
+      {:benchfella, "~> 0.3", only: :dev}
+    ]
   end
 
   # Description.
@@ -38,10 +41,11 @@ defmodule UUID.Mixfile do
 
   # Package info.
   defp package do
-    [files: ["lib", "mix.exs", "README.md", "LICENSE"],
-     maintainers: ["Avenue.place"],
-     licenses: ["Apache 2.0"],
-     links: %{"GitHub" => "https://github.com/avenueplace/elixir-uuid"}]
+    [
+      files: ["lib", "mix.exs", "README.md", "LICENSE"],
+      maintainers: ["Avenue.place"],
+      licenses: ["Apache 2.0"],
+      links: %{"GitHub" => "https://github.com/avenueplace/elixir-uuid"}
+    ]
   end
-
 end
