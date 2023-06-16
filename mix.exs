@@ -14,7 +14,11 @@ defmodule UUID.Mixfile do
      source_url: "https://github.com/zyro/elixir-uuid",
      description: description(),
      package: package(),
-     deps: deps()]
+     deps: deps(),
+     dialyzer: [
+      plt_add_deps: :apps_direct,
+      plt_file: {:no_warn, "priv/plts/project.plt"}
+     ]]
   end
 
   # Application configuration.
@@ -26,7 +30,8 @@ defmodule UUID.Mixfile do
   defp deps do
     [{:ex_doc, "~> 0.19", only: :dev},
      {:earmark, "~> 1.2", only: :dev},
-     {:benchfella, "~> 0.3", only: :dev}]
+     {:benchfella, "~> 0.3", only: :dev},
+     {:dialyxir, "~> 1.3", only: [:dev, :test], runtime: false}]
   end
 
   # Description.

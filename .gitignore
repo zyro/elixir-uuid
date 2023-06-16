@@ -15,3 +15,6 @@ bench/snapshots/
 *.out
 Icon?
 Thumbs.db
+
+# Local PLTs
+priv/plts
