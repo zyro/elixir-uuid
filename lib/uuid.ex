@@ -386,6 +386,27 @@ defmodule UUID do
   end
 
   @doc """
+  Generate a UUID v4 from a PRNG seed using the `rand` module.
+  This is useful if you want your UUIDs to
+  not necessarily be universally unique.
+
+  ## Examples
+
+  ```elixir
+  iex> seed = :rand.seed_s(:exsss, 0)
+  iex> {_updated_seed, uuid} = UUID.uuid4_seeded(seed)
+  iex> uuid
+  "7b17cdb2-dd7c-484d-9d77-42e52d99f72e"
+  ```
+  """
+  @spec uuid4_seeded(:rand.state()) :: {:rand.state, String.t()}
+  def uuid4_seeded(seed) do
+    {<<u0::48, _::4, u1::12, _::2, u2::62>>, seed} = :rand.bytes_s(16, seed)
+    {seed, <<u0::48, @uuid_v4::4, u1::12, @variant10::2, u2::62>>
+      |> uuid_to_string(:default)}
+  end
+
+  @doc """
   Generate a new UUID v5. This version uses an SHA1 hash of fixed value (chosen
   based on a namespace atom - see Appendix C of
   [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt) and a name value. Can also be
@@ -618,7 +639,7 @@ defmodule UUID do
   defp variant(_) do
     raise ArgumentError, message: "Invalid argument; Not valid variant bits"
   end
-  
+
   defp hex_str_to_binary(<< a1, a2, a3, a4, a5, a6, a7, a8,
                             b1, b2, b3, b4,
                             c1, c2, c3, c4,
@@ -633,7 +654,7 @@ defmodule UUID do
         d(e5)::4, d(e6)::4, d(e7)::4, d(e8)::4,
         d(e9)::4, d(e10)::4, d(e11)::4, d(e12)::4 >>
   end
-  
+
   @compile {:inline, d: 1}
 
   defp d(?0), do: 0
