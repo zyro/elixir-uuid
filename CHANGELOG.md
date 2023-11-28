@@ -7,6 +7,10 @@ None.
 
 ---
 
+### v1.2.2, 28 Nov 2023, Elixir `~> 1.0`
+
+* [Enhancement] Update deps. Remove unused `use Bitwise`.
+
 ### v1.2.1, 24 Oct 2019, Elixir `~> 1.0`
 
 * [Enhancement] Improve `string_to_binary` and `binary_to_string` performance.
