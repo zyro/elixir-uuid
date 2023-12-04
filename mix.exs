@@ -7,7 +7,7 @@ defmodule UUID.Mixfile do
     [app: :elixir_uuid,
      name: "UUID",
      version: @version,
-     elixir: "~> 1.7",
+     elixir: "~> 1.14",
      docs: [extras: ["README.md", "CHANGELOG.md"],
             main: "readme",
             source_ref: "v#{@version}"],
