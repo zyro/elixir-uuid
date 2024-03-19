@@ -1,5 +1,4 @@
 defmodule UUID do
-  use Bitwise, only_operators: true
   @moduledoc """
   UUID generator and utilities for [Elixir](http://elixir-lang.org/).
   See [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
@@ -618,7 +617,7 @@ defmodule UUID do
   defp variant(_) do
     raise ArgumentError, message: "Invalid argument; Not valid variant bits"
   end
-  
+
   defp hex_str_to_binary(<< a1, a2, a3, a4, a5, a6, a7, a8,
                             b1, b2, b3, b4,
                             c1, c2, c3, c4,
@@ -633,7 +632,7 @@ defmodule UUID do
         d(e5)::4, d(e6)::4, d(e7)::4, d(e8)::4,
         d(e9)::4, d(e10)::4, d(e11)::4, d(e12)::4 >>
   end
-  
+
   @compile {:inline, d: 1}
 
   defp d(?0), do: 0
